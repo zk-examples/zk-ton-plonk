@@ -1,5 +1,7 @@
 # zk-ton-plonk
 
+**Note: This is an experimental repository!**
+
 This repository demonstrates **PLONK** zero-knowledge proof verification on the TON blockchain. Verifiers are generated from **Circom** circuits and implemented in **FunC** using [export-ton-verifier](https://www.npmjs.com/package/export-ton-verifier).
 
 Gas cost results are in the `bench-snapshots` directory.
