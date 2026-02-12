@@ -1,0 +1,9 @@
+{
+  "gas": {
+    "Deploy": 317
+  },
+  "codeSize": {
+    "multiply_three bits": 25637,
+    "multiply_three cells": 37
+  }
+}

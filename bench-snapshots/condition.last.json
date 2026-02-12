@@ -1,0 +1,9 @@
+{
+  "gas": {
+    "Deploy": 317
+  },
+  "codeSize": {
+    "condition bits": 22573,
+    "condition cells": 31
+  }
+}

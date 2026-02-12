@@ -1,0 +1,32 @@
+node_modules
+temp
+build
+dist
+.DS_Store
+package.ts
+
+# VS Code
+.vscode/*
+.history/
+*.vsix
+
+# IDEA files
+.idea
+
+# VIM
+Session.vim
+.vim/
+
+# Other private editor folders
+.nvim/
+.emacs/
+.helix/
+
+*.zkey
+*.ptau
+*.sym
+*.wtns
+*.r1cs
+*.wasm
+*_js/
+*.tgz

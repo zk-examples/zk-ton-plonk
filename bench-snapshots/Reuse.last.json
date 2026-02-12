@@ -1,0 +1,9 @@
+{
+  "gas": {
+    "Deploy": 317
+  },
+  "codeSize": {
+    "Reuse bits": 22573,
+    "Reuse cells": 31
+  }
+}

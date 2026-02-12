@@ -1,0 +1,397 @@
+#include "imports/stdlib.fc";
+
+;; ============================================
+;; Compressed G1 points for BLS operations (48 bytes each)
+;; ============================================
+const slice verifier::Qm = "859bc9f42b0b3416c6d90298f0153b1894f6ebe17f29a8f4c61f44d6ddb88af7d87ed23ca3822befb3185768d7844e5e"s;
+const slice verifier::Ql = "933767c2fa4e4a3b31e82d81c1e50e93ed3f11caaac421f93fe599a17a7016f19b55d4ecef04366ca00cfaa8008cd96f"s;
+const slice verifier::Qr = "a1939982815e6c5d00bda41cccd589a849af598599d704539ac74aa918b2d95bd23dabaf6b11cc754601330f488c4348"s;
+const slice verifier::Qo = "a59bc9f42b0b3416c6d90298f0153b1894f6ebe17f29a8f4c61f44d6ddb88af7d87ed23ca3822befb3185768d7844e5e"s;
+const slice verifier::Qc = "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
+const slice verifier::S1 = "afd06167138d1c09803623d855f0c96f552f847e21246d611e02946a96e4162d9127a078a048dbbb7b62768edc4e2cce"s;
+const slice verifier::S2 = "b9f8eb485184798b0372fb1006e9936d3b683c8de149f6772ea95aeb713e68ff836acd25a3e9c3cab5fcb61b091f10bb"s;
+const slice verifier::S3 = "890ccaafb5435c6c7468fcf2e5ab3d0b56f510ed51ce23723347c184b373cf8ed9635eab5aae6674c40c5f85801215b1"s;
+const slice verifier::X_2 = "a8482f1ccd9b641883ca27f9b5caa5bac2cbbc60ae66e52f95929e81d8949c40cb7f289153afa20bf32ecada074d5e23007e97008ae14e9dee9f6a60f264e7fd65867fa4ee23cb8fc26ccacdab2bdc2b46d80a792c6db0019c749c2d3d4bde8e"s;
+
+;; ============================================
+;; Uncompressed G1 points for Keccak256 transcript (96 bytes each)
+;; snarkjs uses uncompressed format: x (48 bytes) || y (48 bytes)
+;; ============================================
+const slice verifier::Qm_uc = "059bc9f42b0b3416c6d90298f0153b1894f6ebe17f29a8f4c61f44d6ddb88af7d87ed23ca3822befb3185768d7844e5e0b9e6b6951b54e9f8bcce703ab13f9b90e655ca74406ea29ea4f8ddb4c923c704e95e8bb4ef27183ae07dbbb7085842c"s;
+const slice verifier::Ql_uc = "133767c2fa4e4a3b31e82d81c1e50e93ed3f11caaac421f93fe599a17a7016f19b55d4ecef04366ca00cfaa8008cd96f01f9288d6c48b519ef34df8bf0edc86ce5994c882d5b3e0d484973b7e230ae48eb8675b35ea18c9f8abef48697fa6b11"s;
+const slice verifier::Qr_uc = "01939982815e6c5d00bda41cccd589a849af598599d704539ac74aa918b2d95bd23dabaf6b11cc754601330f488c43480df183e6d8a53b19a7093305713df0d84119a8f4c07b02be5dda6c927fe3fa245e69482b68c591bf0d3a85ded2b7afd6"s;
+const slice verifier::Qo_uc = "059bc9f42b0b3416c6d90298f0153b1894f6ebe17f29a8f4c61f44d6ddb88af7d87ed23ca3822befb3185768d7844e5e0e62a680e7ca97fabf4ec0b29837b31e5611eeddaf7e28957ce144c5aa1eb9b3d016174362618e7c0bf724448f7a267f"s;
+const slice verifier::Qc_uc = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
+const slice verifier::S1_uc = "0fd06167138d1c09803623d855f0c96f552f847e21246d611e02946a96e4162d9127a078a048dbbb7b62768edc4e2cce17125cd5da626043002db080655e9b9546b50d2b5d61fff170d7fb6cc7d99ecdac187f06e207be3f0264215551448250"s;
+const slice verifier::S2_uc = "19f8eb485184798b0372fb1006e9936d3b683c8de149f6772ea95aeb713e68ff836acd25a3e9c3cab5fcb61b091f10bb128bd5667bb5b4ff66b54e16f7f7d348f65f1483f651d17ac667dd08b3c98803ecb5fbb0339c48dba64a3fb70b214501"s;
+const slice verifier::S3_uc = "090ccaafb5435c6c7468fcf2e5ab3d0b56f510ed51ce23723347c184b373cf8ed9635eab5aae6674c40c5f85801215b102492076c859edf4fcc125238dc47ae85e9e4a8f4d53dc17501f18adec76d170192199e7a5b1ac2f7349aa9fa5b4bd91"s;
+
+const int verifier::k1 = 2;
+const int verifier::k2 = 3;
+
+const int verifier::w1 = 3535074550574477753284711575859241084625659976293648650204577841347885064712;
+
+const int verifier::nPublic = 1;
+const int verifier::domainSize = 128; ;; 2**power
+const int verifier::nLagrange = 1; ;; max(1, npub)
+
+const int verifier::publicInputKeyLen = 32;
+
+const slice bls::g1 = "97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb"s;
+const slice bls::g2 = "93e02b6052719f607dacd3a088274f65596bd0d09920b61ab5da61bbdc7f5049334cf11213945d57e5ac7d055d042b7e024aa2b2f08f0a91260805272dc51051c6e47ad4fa403b02b4510b647ae3d1770bac0326a805bbefd48056c8c121bdb8"s;
+
+const int verifier::err::public_not_present = 101;
+const int verifier::err::failed_inverse = 102;
+const int verifier::err::scalar_not_in_field = 103;
+const int verifier::err::too_many_publics = 104;
+
+int bls::pairing(slice ag1, slice ag2, slice bg1, slice bg2) asm "2 PUSHINT BLS_PAIRING";
+
+;; Keccak256 hash function for transcript (snarkjs compatible)
+int keccak256_tuple(tuple p) asm "255 PUSHINT EXPLODEVAR HASHEXT_KECCAK256";
+
+int tlen(tuple t) asm "TLEN";
+
+int bls::R() asm "BLS_PUSHR";
+
+int mulmod(int x, int y, int z) asm "MULMOD";
+
+slice bls::g1_add(slice a, slice b) asm "BLS_G1_ADD";
+slice bls::g1_mul(slice x, int s) asm "BLS_G1_MUL";
+slice bls::g1_sub(slice a, slice b) asm "BLS_G1_SUB";
+slice bls::g1_neg(slice a) asm "BLS_G1_NEG";
+
+builder verifier::scalar_to_builder(int x) inline {
+    return begin_cell().store_uint(x, 256);
+}
+
+;; Convert scalar to slice for Keccak256 transcript (Big-Endian, 32 bytes)
+slice verifier::scalar_to_slice(int x) inline {
+    return begin_cell().store_uint(x, 256).end_cell().begin_parse();
+}
+
+int verifier::ff_inverse(int a, int q) inline {
+    int t = 0;
+    int newt = 1;
+    int r = q;
+    int newr = a;
+    int quotient = 0;
+    int aux = 0;
+    while (newr) {
+        quotient = r / newr;
+        aux = t - quotient * newt;
+        t = newt;
+        newt = aux;
+
+        aux = r - quotient * newr;
+        r = newr;
+        newr = aux;
+    }
+
+    if (r > 1) {
+        throw(verifier::err::failed_inverse);
+    }
+
+    if (t < 0) {
+        t += q;
+    }
+
+    return t;
+}
+
+int verifier::read_arr(cell arr, int i) inline {
+    (slice v, int ok) = arr.udict_get?(verifier::publicInputKeyLen, i);
+    throw_unless(verifier::err::public_not_present, ok);
+    return v.preload_uint(256);
+}
+
+(cell, ()) verifier::set_arr(cell arr, int i, int v) inline {
+    arr~udict_set_builder(verifier::publicInputKeyLen, i, begin_cell().store_uint(v, 256));
+    return (arr, ());
+}
+
+cell verifier::inverse_array(cell vals, int n) inline {
+    cell aux = null();
+    int acc = vals.verifier::read_arr(0);
+    int i = 1;
+    while (i < n) {
+        aux~verifier::set_arr(i, acc);
+        acc = mulmod(acc, vals.verifier::read_arr(i), bls::R());
+        i += 1;
+    }
+    acc = verifier::ff_inverse(acc, bls::R());
+    i -= 1;
+    int inv = 0;
+    while (i > 0) {
+        inv = mulmod(acc, aux.verifier::read_arr(i), bls::R());
+        acc = mulmod(acc, vals.verifier::read_arr(i), bls::R());
+        vals~verifier::set_arr(i, inv);
+        i -= 1;
+    }
+    vals~verifier::set_arr(0, acc);
+    return vals;
+}
+
+;; this function should add similarly to mulmod (i.e. work well when x+y overflows but (x+y)%z doesn't)
+;; but since here it's only used for 255 bit numbers no overflow should happen anyway
+;; however pay attention when porting to other curves if that ever happens
+int addmod(int x, int y, int z) inline {
+    return (x + y) % z;
+}
+
+() verifier::check_field(int x) impure inline {
+    throw_unless(verifier::err::scalar_not_in_field, x < bls::R());
+}
+
+;; Main verify function
+;; Compressed points (A, B, C, Z, T1, T2, T3, Wxi, Wxiw) - for BLS operations
+;; Uncompressed points (A_uc, B_uc, C_uc, Z_uc, T1_uc, T2_uc, T3_uc, Wxi_uc, Wxiw_uc) - for Keccak256 transcript
+int verify(
+    slice A, slice B, slice C, slice Z, slice T1, slice T2, slice T3,
+    int eval_a, int eval_b, int eval_c, int eval_s1, int eval_s2, int eval_zw,
+    slice Wxi, slice Wxiw,
+    cell public,
+    slice A_uc, slice B_uc, slice C_uc, slice Z_uc,
+    slice T1_uc, slice T2_uc, slice T3_uc,
+    slice Wxi_uc, slice Wxiw_uc
+) method_id {
+    verifier::check_field(eval_a);
+    verifier::check_field(eval_b);
+    verifier::check_field(eval_c);
+    verifier::check_field(eval_s1);
+    verifier::check_field(eval_s2);
+    verifier::check_field(eval_zw);
+
+    ;; ============================================
+    ;; Challenge computation using Keccak256 transcript
+    ;; Compatible with snarkjs PLONK
+    ;; ============================================
+
+    ;; Challenge round 2: beta
+    ;; Hash: Qm_uc || Ql_uc || Qr_uc || Qo_uc || Qc_uc || S1_uc || S2_uc || S3_uc || publicSignals || A_uc || B_uc || C_uc
+    tuple beta_hash = empty_tuple();
+    beta_hash~tpush(verifier::Qm_uc);
+    beta_hash~tpush(verifier::Ql_uc);
+    beta_hash~tpush(verifier::Qr_uc);
+    beta_hash~tpush(verifier::Qo_uc);
+    beta_hash~tpush(verifier::Qc_uc);
+    beta_hash~tpush(verifier::S1_uc);
+    beta_hash~tpush(verifier::S2_uc);
+    beta_hash~tpush(verifier::S3_uc);
+
+    ;; Add public signals (as 32-byte big-endian scalars)
+    int pi = 0;
+    cell public_tmp = public;
+    while (pi < verifier::nPublic) {
+        (slice v, int ok) = public_tmp~udict_delete_get?(verifier::publicInputKeyLen, pi);
+        throw_unless(verifier::err::public_not_present, ok);
+        pi += 1;
+        beta_hash~tpush(v);
+    }
+    throw_unless(verifier::err::too_many_publics, null?(public_tmp));
+
+    beta_hash~tpush(A_uc);
+    beta_hash~tpush(B_uc);
+    beta_hash~tpush(C_uc);
+
+    int beta = beta_hash.keccak256_tuple() % bls::R();
+
+    ;; Challenge: gamma
+    ;; Hash: beta
+    tuple gamma_hash = empty_tuple();
+    gamma_hash~tpush(beta.verifier::scalar_to_slice());
+    int gamma = gamma_hash.keccak256_tuple() % bls::R();
+
+    ;; Challenge round 3: alpha
+    ;; Hash: beta || gamma || Z_uc
+    tuple alpha_hash = empty_tuple();
+    alpha_hash~tpush(beta.verifier::scalar_to_slice());
+    alpha_hash~tpush(gamma.verifier::scalar_to_slice());
+    alpha_hash~tpush(Z_uc);
+    int alpha = alpha_hash.keccak256_tuple() % bls::R();
+
+    int alpha2 = mulmod(alpha, alpha, bls::R());
+
+    ;; Challenge round 4: xi
+    ;; Hash: alpha || T1_uc || T2_uc || T3_uc
+    tuple xi_hash = empty_tuple();
+    xi_hash~tpush(alpha.verifier::scalar_to_slice());
+    xi_hash~tpush(T1_uc);
+    xi_hash~tpush(T2_uc);
+    xi_hash~tpush(T3_uc);
+    int xi = xi_hash.keccak256_tuple() % bls::R();
+
+    int betaXi = mulmod(beta, xi, bls::R());
+
+    int xin = xi;
+
+    
+    xin = mulmod(xin, xin, bls::R());
+    
+    xin = mulmod(xin, xin, bls::R());
+    
+    xin = mulmod(xin, xin, bls::R());
+    
+    xin = mulmod(xin, xin, bls::R());
+    
+    xin = mulmod(xin, xin, bls::R());
+    
+    xin = mulmod(xin, xin, bls::R());
+    
+    xin = mulmod(xin, xin, bls::R());
+    
+
+    int zh = (xin - 1) % bls::R();
+    cell invs = null();
+    invs~verifier::set_arr(0, zh);
+
+    ;; Challenge round 5: v
+    ;; Hash: xi || eval_a || eval_b || eval_c || eval_s1 || eval_s2 || eval_zw
+    tuple v_hash = empty_tuple();
+    v_hash~tpush(xi.verifier::scalar_to_slice());
+    v_hash~tpush(eval_a.verifier::scalar_to_slice());
+    v_hash~tpush(eval_b.verifier::scalar_to_slice());
+    v_hash~tpush(eval_c.verifier::scalar_to_slice());
+    v_hash~tpush(eval_s1.verifier::scalar_to_slice());
+    v_hash~tpush(eval_s2.verifier::scalar_to_slice());
+    v_hash~tpush(eval_zw.verifier::scalar_to_slice());
+
+    int v1 = v_hash.keccak256_tuple() % bls::R();
+    int v2 = mulmod(v1, v1, bls::R());
+    int v3 = mulmod(v2, v1, bls::R());
+    int v4 = mulmod(v3, v1, bls::R());
+    int v5 = mulmod(v4, v1, bls::R());
+
+    ;; Challenge: u
+    ;; Hash: Wxi_uc || Wxiw_uc
+    tuple u_hash = empty_tuple();
+    u_hash~tpush(Wxi_uc);
+    u_hash~tpush(Wxiw_uc);
+    int u = u_hash.keccak256_tuple() % bls::R();
+
+    ;; ============================================
+    ;; Lagrange evaluations
+    ;; ============================================
+
+    int w = 1;
+
+    
+    invs~verifier::set_arr(1, mulmod(verifier::domainSize, (xi - w) % bls::R(), bls::R()));
+    
+    
+
+    cell invd = invs.verifier::inverse_array(verifier::nLagrange + 1); ;; + 1 for zhinv
+
+    cell restEvals = null();
+
+    w = 1;
+
+    
+    
+    int eval_l1 = mulmod(invd.verifier::read_arr(1), zh, bls::R());
+    
+    
+    
+
+    ;; ============================================
+    ;; PI (Public Input polynomial evaluation)
+    ;; ============================================
+    int pl = 0;
+
+     
+    
+    pl = (pl - mulmod(eval_l1, public.verifier::read_arr(0), bls::R())) % bls::R();
+    
+    
+
+    ;; ============================================
+    ;; Compute linearization polynomial commitment
+    ;; ============================================
+
+    int e1 = pl;
+    int e2 = mulmod(eval_l1, alpha2, bls::R());
+
+    int e3a = addmod(eval_a, mulmod(beta, eval_s1, bls::R()), bls::R());
+    e3a = addmod(e3a, gamma, bls::R());
+
+    int e3b = addmod(eval_b, mulmod(beta, eval_s2, bls::R()), bls::R());
+    e3b = addmod(e3b, gamma, bls::R());
+
+    int e3c = addmod(eval_c, gamma, bls::R());
+
+    int e3 = mulmod(mulmod(e3a, e3b, bls::R()), e3c, bls::R());
+    e3 = mulmod(e3, eval_zw, bls::R());
+    e3 = mulmod(e3, alpha, bls::R());
+
+    int r0 = addmod(e1, (- e2) % bls::R(), bls::R());
+    r0 = addmod(r0, (- e3) % bls::R(), bls::R());
+
+    ;; D polynomial commitment (using compressed points for BLS ops)
+    slice d1 = bls::g1_mul(verifier::Qm, mulmod(eval_a, eval_b, bls::R()));
+    d1 = bls::g1_add(d1, bls::g1_mul(verifier::Ql, eval_a));
+    d1 = bls::g1_add(d1, bls::g1_mul(verifier::Qr, eval_b));
+    d1 = bls::g1_add(d1, bls::g1_mul(verifier::Qo, eval_c));
+    d1 = bls::g1_add(d1, verifier::Qc);
+
+    int d2a1 = addmod(addmod(eval_a, betaXi, bls::R()), gamma, bls::R());
+    int d2a2 = addmod(addmod(eval_b, mulmod(betaXi, verifier::k1, bls::R()), bls::R()), gamma, bls::R());
+    int d2a3 = addmod(addmod(eval_c, mulmod(betaXi, verifier::k2, bls::R()), bls::R()), gamma, bls::R());
+
+    int d2a = mulmod(d2a1, d2a2, bls::R());
+    d2a = mulmod(d2a, d2a3, bls::R());
+    d2a = mulmod(d2a, alpha, bls::R());
+
+    int d2b = mulmod(eval_l1, alpha2, bls::R());
+
+    slice d2 = bls::g1_mul(Z, addmod(addmod(d2a, d2b, bls::R()), u, bls::R()));
+
+    int d3a = addmod(addmod(eval_a, mulmod(beta, eval_s1, bls::R()), bls::R()), gamma, bls::R());
+    int d3b = addmod(addmod(eval_b, mulmod(beta, eval_s2, bls::R()), bls::R()), gamma, bls::R());
+    int d3c = mulmod(mulmod(alpha, beta, bls::R()), eval_zw, bls::R());
+
+    slice d3 = bls::g1_mul(verifier::S3, mulmod(mulmod(d3a, d3b, bls::R()), d3c, bls::R()));
+
+    slice d4low = T1;
+    slice d4mid = bls::g1_mul(T2, xin);
+    slice d4high = bls::g1_mul(T3, mulmod(xin, xin, bls::R()));
+    slice d4 = bls::g1_add(d4low, bls::g1_add(d4mid, d4high));
+    d4 = bls::g1_mul(d4, zh);
+
+    slice D = bls::g1_sub(bls::g1_sub(bls::g1_add(d1, d2), d3), d4);
+
+    ;; F polynomial commitment
+    slice F = bls::g1_add(D, bls::g1_mul(A, v1));
+    F = bls::g1_add(F, bls::g1_mul(B, v2));
+    F = bls::g1_add(F, bls::g1_mul(C, v3));
+    F = bls::g1_add(F, bls::g1_mul(verifier::S1, v4));
+    F = bls::g1_add(F, bls::g1_mul(verifier::S2, v5));
+
+    ;; E polynomial commitment
+    int e = addmod((- r0) % bls::R(), mulmod(v1, eval_a, bls::R()), bls::R());
+    e = addmod(e, mulmod(v2, eval_b, bls::R()), bls::R());
+    e = addmod(e, mulmod(v3, eval_c, bls::R()), bls::R());
+    e = addmod(e, mulmod(v4, eval_s1, bls::R()), bls::R());
+    e = addmod(e, mulmod(v5, eval_s2, bls::R()), bls::R());
+    e = addmod(e, mulmod(u, eval_zw, bls::R()), bls::R());
+
+    slice E = bls::g1_mul(bls::g1, e);
+
+    ;; ============================================
+    ;; Final pairing check
+    ;; ============================================
+
+    slice A1 = Wxi;
+    A1 = bls::g1_add(A1, bls::g1_mul(Wxiw, u));
+
+    slice B1 = bls::g1_mul(Wxi, xi);
+    int s = mulmod(mulmod(u, xi, bls::R()), verifier::w1, bls::R());
+    B1 = bls::g1_add(B1, bls::g1_mul(Wxiw, s));
+    B1 = bls::g1_add(B1, F);
+    B1 = bls::g1_sub(B1, E);
+
+    return bls::pairing(bls::g1_neg(A1), verifier::X_2, B1, bls::g2);
+}
+
+() recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
+
+}
