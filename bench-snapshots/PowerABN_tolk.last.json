@@ -1,0 +1,10 @@
+{
+  "gas": {
+    "Deploy": 603,
+    "Verify": 292272
+  },
+  "codeSize": {
+    "PowerABN_tolk bits": 22689,
+    "PowerABN_tolk cells": 40
+  }
+}

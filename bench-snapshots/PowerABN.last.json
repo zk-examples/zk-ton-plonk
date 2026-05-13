@@ -1,9 +1,9 @@
 {
   "gas": {
-    "Deploy": 317
+    "Deploy": 291
   },
   "codeSize": {
-    "PowerABN bits": 22805,
+    "PowerABN bits": 22789,
     "PowerABN cells": 32
   }
 }

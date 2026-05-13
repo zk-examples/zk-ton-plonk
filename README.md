@@ -21,6 +21,10 @@ npm install export-ton-verifier@latest
 
 ## How to use
 
+```sh
+npm run export:verifiers
+```
+
 ### Condition (circom)
 
 Select: `out = cond ? a : b` with `cond ∈ {0, 1}`.

@@ -1,30 +1,31 @@
+
 #include "imports/stdlib.fc";
 
 ;; ============================================
 ;; Compressed G1 points for BLS operations (48 bytes each)
 ;; ============================================
 const slice verifier::Qm = "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::Ql = "8fef6cb489e22a0d34d68e967ec49b216ef6f527252ad879e82d87bc184afff54526141317c66573aa6c9375591c0560"s;
-const slice verifier::Qr = "b392f1859370d2521eff74bd2029b9be65980d43bf92c28993e0d3e6aee799d7325bb04304946d414f742bef4f1680e3"s;
-const slice verifier::Qo = "8f3130a0dd84504ee070d9a4b8314ba751c22f585497f167ff3e8d71dac866d0358949c1306457b7ef856defd444ce00"s;
+const slice verifier::Ql = "888e8083855484cb13c2c87461c92890ace7bc1c229af23eadcf08c6d74dcc07e8bf93ce5e4a3d73635ff0aecc06b2df"s;
+const slice verifier::Qr = "83c2e825528c172ec307e342d0467c54564424e2cb85d5c769d645ead8ef60e2f7fc454ceef16d70a7156226d5d28ab1"s;
+const slice verifier::Qo = "899a051b166d3586bbacfd5863d8ca0de0c4d3f04a212d9f90140b11a7f83703d2a2cc5d40dbd7d56f3de9ad95008c4d"s;
 const slice verifier::Qc = "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::S1 = "80be764bded0b4397c1e2c847d57bc6749c4399f4deb55ac444368340e242d25b1dd425c70fbef19c04b38ed1b7a2f6d"s;
-const slice verifier::S2 = "a248ce2414d83fb3e81b315182da7a14dbfe5a8ba0027eb41d2755c7c5363a41ad6e05dfd2d97a83b19959471616a7a1"s;
-const slice verifier::S3 = "912d92cb3989caa373857bc26f635f118208323b928d5aa97bfc288e48892f55a8ef8447d34f2465aa56b8257e7b8dc2"s;
-const slice verifier::X_2 = "90db00c350cea4eb27828185b9885d67f470796bf17469319e810d6fa0864422295f8a05ef729bef767135381f27bb7d0d980429c0a83a375b6b1ef77096b0efdabfdd34552f9211563f575c4120501388b8e8f90262abc05ecd70c772a3dbf9"s;
+const slice verifier::S1 = "84e5d5788f7bb840fbe9da0c1906997f12f3f2916ef2e76dee9719dd32ec0e4aa9c42af2ba29c62f501411183ec3039b"s;
+const slice verifier::S2 = "91ee24a04659dad9656736e65ddad55acf8c1079a85da653014577ddd7d4929e7883aeaf2e519b1998d180dc15321ef3"s;
+const slice verifier::S3 = "a06893eee68311d9ab7b40ed1a23ca4920a41e2591e6a0e2593bff17a26af9ee1519242a1d0b1a14a772e3335c80322e"s;
+const slice verifier::X_2 = "968a8bcfe626389dd1f93a7aa307424963f0b3e3e6c59f8982b076498888f47e1ae0f794dd8960fe7ecaa848ac9f23fe0007533bd7de5770241d8821e87f71390119edb8bf39be9da36b05533b2d933e00c4b3f16754edf4a822fd32ffd561a7"s;
 
 ;; ============================================
 ;; Uncompressed G1 points for Keccak256 transcript (96 bytes each)
 ;; snarkjs uses uncompressed format: x (48 bytes) || y (48 bytes)
 ;; ============================================
 const slice verifier::Qm_uc = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::Ql_uc = "0fef6cb489e22a0d34d68e967ec49b216ef6f527252ad879e82d87bc184afff54526141317c66573aa6c9375591c05600b918acbdaff6f405e2666971983f8aa4add7a28257b58495a2907cd2ff5a7febefefe5920e6df4e7cd5a46d95595221"s;
-const slice verifier::Qr_uc = "1392f1859370d2521eff74bd2029b9be65980d43bf92c28993e0d3e6aee799d7325bb04304946d414f742bef4f1680e317155d8bc2d1293604a44393869cd116ea05b1414d7a4348fec91b90b04d1cf12db2d9b318ed363c18532a73cf5ae196"s;
-const slice verifier::Qo_uc = "0f3130a0dd84504ee070d9a4b8314ba751c22f585497f167ff3e8d71dac866d0358949c1306457b7ef856defd444ce0004bd9a763578d6a1527855d829742b488f41a9ce7a25424e9dd1b09e6a8ba9279cf643eff0b550636f56ebf13ccb8008"s;
+const slice verifier::Ql_uc = "088e8083855484cb13c2c87461c92890ace7bc1c229af23eadcf08c6d74dcc07e8bf93ce5e4a3d73635ff0aecc06b2df026a9bc413deb64fe3c325ec4a528100bc81380c8df45150ac9e3ec73d8ac510afe262e0b2aa4fbcf9611831ccc0aa8c"s;
+const slice verifier::Qr_uc = "03c2e825528c172ec307e342d0467c54564424e2cb85d5c769d645ead8ef60e2f7fc454ceef16d70a7156226d5d28ab1065063bd7baadcdb2608e71c036fa81ed37d8f33c64cd658b42316009bd6f7bcfeca2dd8ce34b047069843cfeaf28059"s;
+const slice verifier::Qo_uc = "099a051b166d3586bbacfd5863d8ca0de0c4d3f04a212d9f90140b11a7f83703d2a2cc5d40dbd7d56f3de9ad95008c4d0a0b5c484c3490e99e91f0e9485c2ffb64b804d0ab19fc6c44703504d324700be469dfe918935e6be6c7e8f1562dfa85"s;
 const slice verifier::Qc_uc = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::S1_uc = "00be764bded0b4397c1e2c847d57bc6749c4399f4deb55ac444368340e242d25b1dd425c70fbef19c04b38ed1b7a2f6d073ea3675ad911dd0b983d6f633ba6a36d6e6bd9cc658a167bbe389fcf568039e19b1fb21a515f39cfb9a85baae1eb2b"s;
-const slice verifier::S2_uc = "0248ce2414d83fb3e81b315182da7a14dbfe5a8ba0027eb41d2755c7c5363a41ad6e05dfd2d97a83b19959471616a7a115abbbc3b0537752ceaf24b9a7a56af805c9e1db21788a17706326d7f3dc59513870313e1292ea5348e9270f9fca1d6a"s;
-const slice verifier::S3_uc = "112d92cb3989caa373857bc26f635f118208323b928d5aa97bfc288e48892f55a8ef8447d34f2465aa56b8257e7b8dc203f4b8e675d9b77a425cd8bc26b0df33ba69ca34c65ceb6801a7f9de8e6b84081023d78362720ff1ab4d50727c8f92ef"s;
+const slice verifier::S1_uc = "04e5d5788f7bb840fbe9da0c1906997f12f3f2916ef2e76dee9719dd32ec0e4aa9c42af2ba29c62f501411183ec3039b02b8b5c9f59e941520b909e530ce22aed635631a1270f5681b99b2f169995b39e3edb2a5a757b75dec1a16f4215ca057"s;
+const slice verifier::S2_uc = "11ee24a04659dad9656736e65ddad55acf8c1079a85da653014577ddd7d4929e7883aeaf2e519b1998d180dc15321ef307c2bdcccac17b1186e79a0ae5c5c0d9460797b1823fb7195abadbb7ff473cd036ad09df3c27a91c83a836f00ce69099"s;
+const slice verifier::S3_uc = "006893eee68311d9ab7b40ed1a23ca4920a41e2591e6a0e2593bff17a26af9ee1519242a1d0b1a14a772e3335c80322e1112f83c78840f3204d392be06609da4142a03fce11602dfc681bc58c82f79ffc854c3afc0ccea1fb1eca61e8ddbb408"s;
 
 const int verifier::k1 = 2;
 const int verifier::k2 = 3;
@@ -50,8 +51,6 @@ int bls::pairing(slice ag1, slice ag2, slice bg1, slice bg2) asm "2 PUSHINT BLS_
 ;; Keccak256 hash function for transcript (snarkjs compatible)
 int keccak256_tuple(tuple p) asm "255 PUSHINT EXPLODEVAR HASHEXT_KECCAK256";
 
-int tlen(tuple t) asm "TLEN";
-
 int bls::R() asm "BLS_PUSHR";
 
 int mulmod(int x, int y, int z) asm "MULMOD";
@@ -60,10 +59,6 @@ slice bls::g1_add(slice a, slice b) asm "BLS_G1_ADD";
 slice bls::g1_mul(slice x, int s) asm "BLS_G1_MUL";
 slice bls::g1_sub(slice a, slice b) asm "BLS_G1_SUB";
 slice bls::g1_neg(slice a) asm "BLS_G1_NEG";
-
-builder verifier::scalar_to_builder(int x) inline {
-    return begin_cell().store_uint(x, 256);
-}
 
 ;; Convert scalar to slice for Keccak256 transcript (Big-Endian, 32 bytes)
 slice verifier::scalar_to_slice(int x) inline {
@@ -225,15 +220,10 @@ int verify(
 
     int xin = xi;
 
-    
     xin = mulmod(xin, xin, bls::R());
-    
     xin = mulmod(xin, xin, bls::R());
-    
     xin = mulmod(xin, xin, bls::R());
-    
     xin = mulmod(xin, xin, bls::R());
-    
 
     int zh = (xin - 1) % bls::R();
     cell invs = null();
@@ -269,10 +259,7 @@ int verify(
 
     int w = 1;
 
-    
     invs~verifier::set_arr(1, mulmod(verifier::domainSize, (xi - w) % bls::R(), bls::R()));
-    
-    
 
     cell invd = invs.verifier::inverse_array(verifier::nLagrange + 1); ;; + 1 for zhinv
 
@@ -280,23 +267,14 @@ int verify(
 
     w = 1;
 
-    
-    
     int eval_l1 = mulmod(invd.verifier::read_arr(1), zh, bls::R());
-    
-    
-    
 
     ;; ============================================
     ;; PI (Public Input polynomial evaluation)
     ;; ============================================
     int pl = 0;
 
-     
-    
     pl = (pl - mulmod(eval_l1, public.verifier::read_arr(0), bls::R())) % bls::R();
-    
-    
 
     ;; ============================================
     ;; Compute linearization polynomial commitment
@@ -386,6 +364,6 @@ int verify(
     return bls::pairing(bls::g1_neg(A1), verifier::X_2, B1, bls::g2);
 }
 
-() recv_internal(int my_balance, int msg_value, cell in_msg_full, slice in_msg_body) impure {
+() recv_internal() impure {
 
 }

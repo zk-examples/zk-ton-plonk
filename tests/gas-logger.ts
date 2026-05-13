@@ -58,6 +58,14 @@ export class GasLogAndSave {
         this.gasLogs[stepName] = gasUsed;
     }
 
+    rememberGasValue(stepName: string, gasUsed: bigint | number | undefined | null) {
+        if (gasUsed === undefined || gasUsed === null) {
+            return;
+        }
+
+        this.gasLogs[stepName] = Number(gasUsed);
+    }
+
     rememberBocSize(contractName: string, code: Cell) {
         const { nBits, nCells } = calculateCellsAndBits(code);
         this.codeSize[`${contractName} bits`] = nBits;

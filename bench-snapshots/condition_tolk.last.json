@@ -1,0 +1,11 @@
+{
+  "gas": {
+    "Deploy": 603,
+    "Verify 1": 290312,
+    "Verify 0": 291122
+  },
+  "codeSize": {
+    "condition_tolk bits": 22505,
+    "condition_tolk cells": 39
+  }
+}

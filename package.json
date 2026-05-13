@@ -6,28 +6,30 @@
         "start": "blueprint run",
         "build": "blueprint build",
         "test": "jest --verbose",
-        "release": "blueprint pack && npm publish --access public"
+        "export:verifiers": "ts-node scripts/exportVerifiers.ts",
+        "export:verifiers:func": "ts-node scripts/exportVerifiers.ts func",
+        "export:verifiers:tolk": "ts-node scripts/exportVerifiers.ts tolk"
     },
     "dependencies": {
         "@ton/core": "~0",
-        "export-ton-verifier": "^2.0.0",
+        "export-ton-verifier": "^2.3.2",
         "snarkjs": "^0.7.6"
     },
     "devDependencies": {
         "@tact-lang/compiler": ">=1.6.13 <2.0.0",
-        "@ton-community/func-js": ">=0.10.0",
-        "@ton/blueprint": ">=0.40.0",
+        "@ton-community/func-js": ">=0.11.0",
+        "@ton/blueprint": ">=0.44.2",
         "@ton/crypto": "^3.3.0",
-        "@ton/sandbox": ">=0.37.0",
-        "@ton/test-utils": ">=0.11.0",
-        "@ton/tolk-js": ">=1.0.0",
-        "@ton/ton": ">=15.3.1 <16.0.0",
+        "@ton/sandbox": ">=0.42.0",
+        "@ton/test-utils": ">=0.12.0",
+        "@ton/tolk-js": ">=1.4.0",
+        "@ton/ton": "^16.2.4",
         "@types/jest": "^30.0.0",
         "@types/node": "^22.17.2",
         "@types/snarkjs": "^0.7.9",
-        "jest": "^30.0.5",
-        "prettier": "^3.6.2",
-        "ts-jest": "^29.4.1",
+        "jest": "^30.4.2",
+        "prettier": "^3.8.3",
+        "ts-jest": "^29.4.9",
         "ts-node": "^10.9.2",
         "typescript": "^5.9.2"
     }
