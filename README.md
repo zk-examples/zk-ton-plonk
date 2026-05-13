@@ -50,8 +50,8 @@ snarkjs zkey export verificationkey condition_0000.zkey verification_key.json
 cd ../..
 
 # export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/condition/condition_0000.zkey ./contracts/condition.fc --func
 npx export-ton-verifier ./circuits/condition/condition_0000.zkey ./contracts/condition.tolk
+npx export-ton-verifier ./circuits/condition/condition_0000.zkey ./contracts/condition.fc --func
 ```
 
 ### Fibonacci (circom)
@@ -75,8 +75,8 @@ snarkjs zkey export verificationkey fibonacci_0000.zkey verification_key.json
 cd ../..
 
 # export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/fibonacci/fibonacci_0000.zkey ./contracts/fibonacci.fc --func
 npx export-ton-verifier ./circuits/fibonacci/fibonacci_0000.zkey ./contracts/fibonacci.tolk
+npx export-ton-verifier ./circuits/fibonacci/fibonacci_0000.zkey ./contracts/fibonacci.fc --func
 ```
 
 ### MultiplyThree (circom)
@@ -100,8 +100,8 @@ snarkjs zkey export verificationkey multiply_three_0000.zkey verification_key.js
 cd ../..
 
 # export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/multiply_three/multiply_three_0000.zkey ./contracts/multiply_three.fc --func
 npx export-ton-verifier ./circuits/multiply_three/multiply_three_0000.zkey ./contracts/multiply_three.tolk
+npx export-ton-verifier ./circuits/multiply_three/multiply_three_0000.zkey ./contracts/multiply_three.fc --func
 ```
 
 ### PowerABN (circom)
@@ -125,8 +125,8 @@ snarkjs zkey export verificationkey PowerABN_0000.zkey verification_key.json
 cd ../..
 
 # export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/PowerABN/PowerABN_0000.zkey ./contracts/PowerABN.fc --func
 npx export-ton-verifier ./circuits/PowerABN/PowerABN_0000.zkey ./contracts/PowerABN.tolk
+npx export-ton-verifier ./circuits/PowerABN/PowerABN_0000.zkey ./contracts/PowerABN.fc --func
 ```
 
 ### Reuse (circom)
@@ -150,8 +150,8 @@ snarkjs zkey export verificationkey Reuse_0000.zkey verification_key.json
 cd ../..
 
 # export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/Reuse/Reuse_0000.zkey ./contracts/Reuse.fc --func
 npx export-ton-verifier ./circuits/Reuse/Reuse_0000.zkey ./contracts/Reuse.tolk
+npx export-ton-verifier ./circuits/Reuse/Reuse_0000.zkey ./contracts/Reuse.fc --func
 ```
 
 ## Testing contracts
