@@ -1,10 +1,11 @@
 {
   "gas": {
-    "Deploy": 603,
-    "Verify": 292272
+    "Deploy": 741,
+    "Getter verify": 293618,
+    "Send verify": 301238
   },
   "codeSize": {
-    "PowerABN_tolk bits": 22689,
-    "PowerABN_tolk cells": 40
+    "PowerABN_tolk bits": 24856,
+    "PowerABN_tolk cells": 44
   }
 }

@@ -8,7 +8,7 @@ contract Verifier {
 /// Empty persistent storage; verifier constants are embedded in code.
 struct VerifierStorage {}
 
-type ScalarMap = map<uint32, uint256>
+type ScalarArray = array<uint256>
 type G1Compressed = bits384
 type G1Uncompressed = bits768
 
@@ -21,7 +21,7 @@ struct (0x76524659) VerifyProofMessage {
 struct VerifyProofPayload {
   compressed: Cell<CompressedProof>
   evaluations: Cell<EvaluationValues>
-  publicInputs: ScalarMap
+  publicInputs: ScalarArray
   uncompressed: Cell<UncompressedProof>
 }
 
@@ -216,20 +216,22 @@ fun ffInverse(a: int, q: int): int {
   return t;
 }
 
-fun ScalarMap.read(self, i: int): int {
-  val found = self.get(i as uint32);
-  if (!found.isFound) {
+fun ScalarArray.read(self, i: int): int {
+  if (i < 0 || i >= self.size()) {
     throw VerifierErrors.PublicNotPresent;
   }
-  return found.loadValue() as int;
+  return self.get(i) as int;
 }
 
-fun ScalarMap.setAt(mutate self, i: int, v: int): void {
-  self.set(i as uint32, normalizeMod(v, blsR()) as uint256);
+fun ScalarArray.setAt(mutate self, i: int, v: int): void {
+  while (self.size() <= i) {
+    self.push(0 as uint256);
+  }
+  self.set(normalizeMod(v, blsR()) as uint256, i);
 }
 
-fun inverseArray(vals: ScalarMap, n: int): ScalarMap {
-  var aux: ScalarMap = [];
+fun inverseArray(vals: ScalarArray, n: int): ScalarArray {
+  var aux: ScalarArray = [];
   var acc: int = vals.read(0);
   var i: int = 1;
 
@@ -259,17 +261,10 @@ fun checkField(x: int): void {
   }
 }
 
-fun checkPublicInputCount(publicInputs: ScalarMap, nExpected: int): void {
-  var count: int = 0;
-  var cursor = publicInputs.findFirst();
-
-  while (cursor.isFound) {
-    val key = cursor.getKey() as int;
-    if (key >= nExpected) {
-      throw VerifierErrors.TooManyPublics;
-    }
-    count += 1;
-    cursor = publicInputs.iterateNext(cursor);
+fun checkPublicInputCount(publicInputs: ScalarArray, nExpected: int): void {
+  val count = publicInputs.size();
+  if (count > nExpected) {
+    throw VerifierErrors.TooManyPublics;
   }
 
   if (count != nExpected) {
@@ -318,7 +313,7 @@ get fun verify(
   a: slice, b: slice, c: slice, z: slice, t1: slice, t2: slice, t3: slice,
   evalA: int, evalB: int, evalC: int, evalS1: int, evalS2: int, evalZw: int,
   wxi: slice, wxiw: slice,
-  publicInputs: ScalarMap,
+  publicInputs: ScalarArray,
   aUc: slice, bUc: slice, cUc: slice, zUc: slice,
   t1Uc: slice, t2Uc: slice, t3Uc: slice,
   wxiUc: slice, wxiwUc: slice
@@ -384,7 +379,7 @@ get fun verify(
   xin = mulmod(xin, xin, blsR());
 
   val zh = normalizeMod(xin - 1, blsR());
-  var invs: ScalarMap = [];
+  var invs: ScalarArray = [];
   invs.setAt(0, zh);
 
   // Challenge round 5: v.
@@ -415,7 +410,7 @@ get fun verify(
   invs.setAt(1, mulmod(DOMAIN_SIZE, normalizeMod(xi - w, blsR()), blsR()));
 
   val invd = inverseArray(invs, N_LAGRANGE + 1);
-  var restEvals: ScalarMap = [];
+  var restEvals: ScalarArray = [];
 
   w = 1;
 

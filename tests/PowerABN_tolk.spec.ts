@@ -3,7 +3,7 @@ import { compile } from '@ton/blueprint';
 import path from 'path';
 
 import { GasLogAndSave } from './gas-logger';
-import { deployVerifier, expectVerifierAcceptsGeneratedProof } from './tolk-verifier-helpers';
+import { deployVerifier, expectVerifierAcceptsGeneratedProofMessage } from './tolk-verifier-helpers';
 
 const verificationKey = require('../circuits/PowerABN/verification_key.json');
 const wasmPath = path.join(__dirname, '../circuits/PowerABN/PowerABN_js', 'PowerABN.wasm');
@@ -23,11 +23,16 @@ describe('PowerABN_tolk', () => {
     });
 
     it('should call the Tolk verifier with a PLONK proof for a^N*b^N', async () => {
-        const { verifier } = await deployVerifier(code, GAS_LOG);
+        const { deployer, verifier } = await deployVerifier(code, GAS_LOG);
 
-        await expectVerifierAcceptsGeneratedProof(verifier, verificationKey, { a: '2', b: '3' }, wasmPath, zkeyPath, {
-            logger: GAS_LOG,
-            stepName: 'Verify',
-        });
+        await expectVerifierAcceptsGeneratedProofMessage(
+            deployer,
+            verifier,
+            verificationKey,
+            { a: '2', b: '3' },
+            wasmPath,
+            zkeyPath,
+            { logger: GAS_LOG, getterStepName: 'Getter verify', messageStepName: 'Send verify' },
+        );
     });
 });

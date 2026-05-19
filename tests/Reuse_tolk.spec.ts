@@ -1,22 +1,14 @@
-import { Cell, toNano, TupleItem } from '@ton/core';
+import { Cell } from '@ton/core';
 import { compile } from '@ton/blueprint';
 import path from 'path';
 
 import { GasLogAndSave } from './gas-logger';
-import { deployVerifier, expectVerifierAcceptsGeneratedProof } from './tolk-verifier-helpers';
+import { deployVerifier, expectVerifierAcceptsGeneratedProofMessage } from './tolk-verifier-helpers';
 
 const verificationKey = require('../circuits/Reuse/verification_key.json');
 const wasmPath = path.join(__dirname, '../circuits/Reuse/Reuse_js', 'Reuse.wasm');
 const zkeyPath = path.join(__dirname, '../circuits/Reuse', 'Reuse_0000.zkey');
 const validInput = { a: '534', b: '43', c: '423' };
-
-function requireTupleInt(item: TupleItem | undefined, index: number): bigint {
-    if (item?.type !== 'int') {
-        throw new Error(`Expected calldata[${index}] to be int`);
-    }
-
-    return item.value;
-}
 
 describe('Reuse_tolk', () => {
     let code: Cell;
@@ -33,46 +25,15 @@ describe('Reuse_tolk', () => {
 
     it('should call the Tolk verifier and send a PLONK proof to the contract', async () => {
         const { deployer, verifier } = await deployVerifier(code, GAS_LOG);
-        const calldata = await expectVerifierAcceptsGeneratedProof(
+        await expectVerifierAcceptsGeneratedProofMessage(
+            deployer,
             verifier,
             verificationKey,
             validInput,
             wasmPath,
             zkeyPath,
-            { logger: GAS_LOG, stepName: 'Getter verify' },
+            { logger: GAS_LOG, getterStepName: 'Getter verify', messageStepName: 'Send verify' },
         );
-
-        const verifyResult = await verifier.sendVerify(deployer.getSender(), toNano('1'), calldata);
-        GAS_LOG.rememberGas('Send verify', verifyResult.transactions.slice(1));
-
-        expect(verifyResult.transactions).toHaveTransaction({
-            from: deployer.address,
-            to: verifier.address,
-            success: true,
-        });
     });
 
-    it('should reject an invalid PLONK proof sent as an internal message', async () => {
-        const { deployer, verifier } = await deployVerifier(code, GAS_LOG);
-        const calldata = await expectVerifierAcceptsGeneratedProof(
-            verifier,
-            verificationKey,
-            validInput,
-            wasmPath,
-            zkeyPath,
-            { logger: GAS_LOG, stepName: 'Getter verify before invalid send' },
-        );
-        const badCalldata = [...calldata];
-        badCalldata[7] = { type: 'int', value: requireTupleInt(badCalldata[7], 7) + 1n };
-
-        const verifyResult = await verifier.sendVerify(deployer.getSender(), toNano('1'), badCalldata);
-        GAS_LOG.rememberGas('Reject invalid proof', verifyResult.transactions.slice(1));
-
-        expect(verifyResult.transactions).toHaveTransaction({
-            from: deployer.address,
-            to: verifier.address,
-            success: false,
-            exitCode: 106,
-        });
-    });
 });

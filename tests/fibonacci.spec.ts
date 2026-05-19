@@ -4,12 +4,12 @@ import { compile } from '@ton/blueprint';
 import '@ton/test-utils';
 
 import { GasLogAndSave } from './gas-logger';
-import { Verifier } from '../wrappers/Verifier_plonk';
+import { Verifier } from '../wrappers/Verifier_func_plonk';
 
 import * as snarkjs from 'snarkjs';
 import path from 'path';
 
-const { exportPlonkFuncCalldata } = require('export-ton-verifier');
+import { exportPlonkFuncCalldata } from 'export-ton-verifier';
 
 const wasmPath = path.join(__dirname, '../circuits/fibonacci/fibonacci_js', 'fibonacci.wasm');
 const zkeyPath = path.join(__dirname, '../circuits/fibonacci', 'fibonacci_0000.zkey');

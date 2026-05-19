@@ -1,13 +1,11 @@
 {
   "gas": {
-    "Deploy": 641,
-    "Getter verify": 293408,
-    "Send verify": 300244,
-    "Getter verify before invalid send": 288764,
-    "Reject invalid proof": 295954
+    "Deploy": 741,
+    "Getter verify": 287388,
+    "Send verify": 295008
   },
   "codeSize": {
-    "Reuse_tolk bits": 24745,
-    "Reuse_tolk cells": 41
+    "Reuse_tolk bits": 24632,
+    "Reuse_tolk cells": 43
   }
 }

@@ -3,7 +3,7 @@ import { compile } from '@ton/blueprint';
 import path from 'path';
 
 import { GasLogAndSave } from './gas-logger';
-import { deployVerifier, expectVerifierAcceptsGeneratedProof } from './tolk-verifier-helpers';
+import { deployVerifier, expectVerifierAcceptsGeneratedProofMessage } from './tolk-verifier-helpers';
 
 const verificationKey = require('../circuits/fibonacci/verification_key.json');
 const wasmPath = path.join(__dirname, '../circuits/fibonacci/fibonacci_js', 'fibonacci.wasm');
@@ -23,11 +23,16 @@ describe('fibonacci_tolk', () => {
     });
 
     it('should call the Tolk verifier with a PLONK proof for fibonacci(10)', async () => {
-        const { verifier } = await deployVerifier(code, GAS_LOG);
+        const { deployer, verifier } = await deployVerifier(code, GAS_LOG);
 
-        await expectVerifierAcceptsGeneratedProof(verifier, verificationKey, { in: ['1', '1'] }, wasmPath, zkeyPath, {
-            logger: GAS_LOG,
-            stepName: 'Verify',
-        });
+        await expectVerifierAcceptsGeneratedProofMessage(
+            deployer,
+            verifier,
+            verificationKey,
+            { in: ['1', '1'] },
+            wasmPath,
+            zkeyPath,
+            { logger: GAS_LOG, getterStepName: 'Getter verify', messageStepName: 'Send verify' },
+        );
     });
 });

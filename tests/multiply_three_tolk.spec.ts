@@ -3,7 +3,7 @@ import { compile } from '@ton/blueprint';
 import path from 'path';
 
 import { GasLogAndSave } from './gas-logger';
-import { deployVerifier, expectVerifierAcceptsGeneratedProof } from './tolk-verifier-helpers';
+import { deployVerifier, expectVerifierAcceptsGeneratedProofMessage } from './tolk-verifier-helpers';
 
 const verificationKey = require('../circuits/multiply_three/verification_key.json');
 const wasmPath = path.join(__dirname, '../circuits/multiply_three/multiply_three_js', 'multiply_three.wasm');
@@ -23,15 +23,16 @@ describe('multiply_three_tolk', () => {
     });
 
     it('should call the Tolk verifier with a PLONK proof for a*b*c', async () => {
-        const { verifier } = await deployVerifier(code, GAS_LOG);
+        const { deployer, verifier } = await deployVerifier(code, GAS_LOG);
 
-        await expectVerifierAcceptsGeneratedProof(
+        await expectVerifierAcceptsGeneratedProofMessage(
+            deployer,
             verifier,
             verificationKey,
             { a: '10', b: '20', c: '30' },
             wasmPath,
             zkeyPath,
-            { logger: GAS_LOG, stepName: 'Verify' },
+            { logger: GAS_LOG, getterStepName: 'Getter verify', messageStepName: 'Send verify' },
         );
     });
 });

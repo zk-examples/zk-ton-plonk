@@ -25,9 +25,12 @@ npm install export-ton-verifier@latest
 npm run export:verifiers
 npm run export:verifiers:func
 npm run export:verifiers:tolk
+npm run sync:fift
 ```
 
 `export:verifiers` generates both FunC (`.fc`) and Tolk (`.tolk`) contracts. Use the `:func` or `:tolk` variants to export only one target language.
+
+`sync:fift` rebuilds the supported Blueprint contracts and copies their generated Fift output from `build/<name>/<name>.fif` into checked-in `contracts/*.fif` files. In this repo's Blueprint version, `.fif` is an output artifact, not a native source language, so this is the safest way to keep manual Fift copies in sync.
 
 ### Condition (circom)
 

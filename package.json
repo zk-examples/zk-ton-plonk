@@ -12,7 +12,7 @@
     },
     "dependencies": {
         "@ton/core": "~0",
-        "export-ton-verifier": "^2.3.2",
+        "export-ton-verifier": "^2.3.3",
         "snarkjs": "^0.7.6"
     },
     "devDependencies": {

@@ -2,15 +2,20 @@ import { Blockchain, SandboxContract, TreasuryContract } from '@ton/sandbox';
 import { Cell, toNano, TupleItem } from '@ton/core';
 import '@ton/test-utils';
 
-import { Verifier } from '../wrappers/Verifier_plonk';
+import { Verifier } from '../wrappers/Verifier_tolk_plonk';
 import { GasLogAndSave } from './gas-logger';
 
 import * as snarkjs from 'snarkjs';
 
-const { exportPlonkFuncCalldata } = require('export-ton-verifier');
+import { exportPlonkTolkCalldata } from 'export-ton-verifier';
 
 type CircuitInput = Record<string, string | string[]>;
 type GetterBenchmark = { logger: GasLogAndSave; stepName: string };
+type MessageBenchmark = {
+    logger: GasLogAndSave;
+    getterStepName: string;
+    messageStepName: string;
+};
 
 export async function deployVerifier(code: Cell): Promise<{
     deployer: SandboxContract<TreasuryContract>;
@@ -55,7 +60,7 @@ export async function generateCalldata(
     const isVerify = await snarkjs.plonk.verify(verificationKey, publicSignals, proof);
     expect(isVerify).toBe(true);
 
-    return exportPlonkFuncCalldata(proof, publicSignals);
+    return exportPlonkTolkCalldata(proof, publicSignals);
 }
 
 export async function expectVerifierAcceptsGeneratedProof(
@@ -71,6 +76,32 @@ export async function expectVerifierAcceptsGeneratedProof(
 
     expect(res.ok).toBe(true);
     benchmark?.logger.rememberGasValue(benchmark.stepName, res.gasUsed);
+
+    return calldata;
+}
+
+export async function expectVerifierAcceptsGeneratedProofMessage(
+    deployer: SandboxContract<TreasuryContract>,
+    verifier: SandboxContract<Verifier>,
+    verificationKey: any,
+    input: CircuitInput,
+    wasmPath: string,
+    zkeyPath: string,
+    benchmark: MessageBenchmark,
+) {
+    const calldata = await expectVerifierAcceptsGeneratedProof(verifier, verificationKey, input, wasmPath, zkeyPath, {
+        logger: benchmark.logger,
+        stepName: benchmark.getterStepName,
+    });
+
+    const verifyResult = await verifier.sendVerify(deployer.getSender(), toNano('1'), calldata);
+    benchmark.logger.rememberGas(benchmark.messageStepName, verifyResult.transactions.slice(1));
+
+    expect(verifyResult.transactions).toHaveTransaction({
+        from: deployer.address,
+        to: verifier.address,
+        success: true,
+    });
 
     return calldata;
 }
