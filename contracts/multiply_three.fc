@@ -1,31 +1,34 @@
 
 #include "imports/stdlib.fc";
 
+const op::verify = 0x76524659;
+const int verifier::minVerifyValue = 50000000;
+
 ;; ============================================
 ;; Compressed G1 points for BLS operations (48 bytes each)
 ;; ============================================
-const slice verifier::Qm = "b2e0ef5f9805af6fa8c854c70d1107378dab11f41429f3784e8d03cc3d014efec442d33f32d938cddc4426e15014115e"s;
-const slice verifier::Ql = "b593b792400364f9847e9ec357784b6b89b88760160f9ccbfb0ecf78527faa872ae5a7243a1f2e3626fd65e607c9e6e9"s;
+const slice verifier::Qm = "8380862ef9a65d21913281794f081a1861de4e9d9e85ac978ad141a1556fb19b888f284e6af7855cd0b4a4dcaf93aa3b"s;
+const slice verifier::Ql = "b0af667d05ee08d282244bb009a8baff8b4254cd0834b8a63c616c6bc2966a1444c8074e45a87151054f50aee8cc37b7"s;
 const slice verifier::Qr = "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::Qo = "92e0ef5f9805af6fa8c854c70d1107378dab11f41429f3784e8d03cc3d014efec442d33f32d938cddc4426e15014115e"s;
+const slice verifier::Qo = "a380862ef9a65d21913281794f081a1861de4e9d9e85ac978ad141a1556fb19b888f284e6af7855cd0b4a4dcaf93aa3b"s;
 const slice verifier::Qc = "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::S1 = "a4900f9d503d5ff54b0d198932976e43599a4d707e622cb99b47e252996dcb9bc00a27e27e7f185296058514d9cde5ef"s;
-const slice verifier::S2 = "b1c5dc42381a4c2a19569da90f2d2ec9480370d84d154ffb8df47fc7ac0231fa0b182f79d351ac13f6cf92e5c8ae581a"s;
-const slice verifier::S3 = "826f998beb0828d04a1ad2c6730326bed8cd79bfc73cdc2965688d156090a832f6d6fdce2b207ee366b75adb57925159"s;
-const slice verifier::X_2 = "a1ad071162d98e255a7334372a7e7cf26e82084ff7fbd25277cd1ce7bd34e4239246e4f032abcbf909ab3fe19015addf0fe354bde5d2e532bfe14cdc4e9d28294ed6057dd41050de4bb549c54eac33cac1ac308ea86e57a3e4158fc1e4c21f0d"s;
+const slice verifier::S1 = "95302690da8ec272548b402561f8b5dcbd588440c5bbf8f1e5313de2d3b7b6d9ac5b81196133e26b01a3652332c3e178"s;
+const slice verifier::S2 = "b27aca86b464edb8f64bdda659ca9012728ae358481de9fe424255636623108e55ccd3866022100ba97c7e33402de310"s;
+const slice verifier::S3 = "9402b5ba380646a67ab87ee8851926aee4b9ec3c68986b18661886c69413ba30f152f9c1481d7e9799b5c5f27018149f"s;
+const slice verifier::X_2 = "a180b5fee46063d477ed0cca4effeb1eb6f1d4836abdb9d83b67971f06cc2bb4c8a8daf9077a640d31d5404f0d730bb40fa86d981960f9f3c0ae0a1f2e56f158889f6b99077bf12ed67e73b04c7fdd00fa78ed740576789450dcaf0df3e39b70"s;
 
 ;; ============================================
 ;; Uncompressed G1 points for Keccak256 transcript (96 bytes each)
 ;; snarkjs uses uncompressed format: x (48 bytes) || y (48 bytes)
 ;; ============================================
-const slice verifier::Qm_uc = "12e0ef5f9805af6fa8c854c70d1107378dab11f41429f3784e8d03cc3d014efec442d33f32d938cddc4426e15014115e0d262c825e68b905b528a5aaac0b3dcdde0a06955b017af24ba9563ed041219cf3dcd14243a60a78a4b4fc8921d1ac8c"s;
-const slice verifier::Ql_uc = "1593b792400364f9847e9ec357784b6b89b88760160f9ccbfb0ecf78527faa872ae5a7243a1f2e3626fd65e607c9e6e9171e0d5c5811f666e9f62e6eaa913501049884d0c74972bcfad1e216a7022d75a83016af5a8321c5b1e80bf89979b008"s;
+const slice verifier::Qm_uc = "0380862ef9a65d21913281794f081a1861de4e9d9e85ac978ad141a1556fb19b888f284e6af7855cd0b4a4dcaf93aa3b04d099832d1afdc5bdcc92aaf36e56d66ab33b4123d2b4e63a06dac51e89ffee0276abf27142da38d219f0a2db89c972"s;
+const slice verifier::Ql_uc = "10af667d05ee08d282244bb009a8baff8b4254cd0834b8a63c616c6bc2966a1444c8074e45a87151054f50aee8cc37b71622db81571e94fb73893f3fb375702a9882c1196c50e5eda9cc445dc1dc253e86b661c0d9f533766ccbebcb48697213"s;
 const slice verifier::Qr_uc = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::Qo_uc = "12e0ef5f9805af6fa8c854c70d1107378dab11f41429f3784e8d03cc3d014efec442d33f32d938cddc4426e15014115e0cdae567db172d9495f3020b97406f09866d44ef988397cd1b877c62266fd4872acf2ebc6dadf587154a0376de2dfe1f"s;
+const slice verifier::Qo_uc = "0380862ef9a65d21913281794f081a1861de4e9d9e85ac978ad141a1556fb19b888f284e6af7855cd0b4a4dcaf93aa3b153078670c64e8d48d4f150b4fdd5600f9c41043cfb25dd92d29f7dbd826f6361c35540c401125c6e7e50f5d2475e139"s;
 const slice verifier::Qc_uc = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"s;
-const slice verifier::S1_uc = "04900f9d503d5ff54b0d198932976e43599a4d707e622cb99b47e252996dcb9bc00a27e27e7f185296058514d9cde5ef110f69041d2cd5834e3485d9eda0355fe61e8a63e9870de9ec5df1b6e0b7d50cd8a9dbee6019d5d551c7c0bc8dad58ce"s;
-const slice verifier::S2_uc = "11c5dc42381a4c2a19569da90f2d2ec9480370d84d154ffb8df47fc7ac0231fa0b182f79d351ac13f6cf92e5c8ae581a16affac96732ab080c9d4429088bfe2ed56f919d655f9ee68050d342bcd49b878cb8c3a33d42d559f29c7f299f676695"s;
-const slice verifier::S3_uc = "026f998beb0828d04a1ad2c6730326bed8cd79bfc73cdc2965688d156090a832f6d6fdce2b207ee366b75adb57925159024b5e8b0041a1bcf27ba846e48169014868ecc780b4a9d17605da72969da1c8c042aa940fd342446304beb256dfb648"s;
+const slice verifier::S1_uc = "15302690da8ec272548b402561f8b5dcbd588440c5bbf8f1e5313de2d3b7b6d9ac5b81196133e26b01a3652332c3e178012a552af04fab1e3c120cbb3cfcf9e1ca6ad8b893a200a728e63979e033ccc27997b2da8a66c4d25fd7922481f4085b"s;
+const slice verifier::S2_uc = "127aca86b464edb8f64bdda659ca9012728ae358481de9fe424255636623108e55ccd3866022100ba97c7e33402de31011c4d41e4b9b3064dc7be970595fe60fa9aac9defca77bdacdda56af95ca226d73115ce2c57da21a24e9db38fd1dff1c"s;
+const slice verifier::S3_uc = "1402b5ba380646a67ab87ee8851926aee4b9ec3c68986b18661886c69413ba30f152f9c1481d7e9799b5c5f27018149f00d406479a13387e758a37bc3835aea07889265389575c8952af2c645ec927954637feeb79a25399668d6d5b0877bfbe"s;
 
 const int verifier::k1 = 2;
 const int verifier::k2 = 3;
@@ -45,6 +48,9 @@ const int verifier::err::public_not_present = 101;
 const int verifier::err::failed_inverse = 102;
 const int verifier::err::scalar_not_in_field = 103;
 const int verifier::err::too_many_publics = 104;
+const int verifier::err::invalid_message = 105;
+const int verifier::err::invalid_proof = 106;
+const int verifier::err::not_enough_value = 107;
 
 int bls::pairing(slice ag1, slice ag2, slice bg1, slice bg2) asm "2 PUSHINT BLS_PAIRING";
 
@@ -135,6 +141,7 @@ int addmod(int x, int y, int z) inline {
 }
 
 () verifier::check_field(int x) impure inline {
+    throw_unless(verifier::err::scalar_not_in_field, x >= 0);
     throw_unless(verifier::err::scalar_not_in_field, x < bls::R());
 }
 
@@ -373,6 +380,113 @@ int verify(
     return bls::pairing(bls::g1_neg(A1), verifier::X_2, B1, bls::g2);
 }
 
-() recv_internal() impure {
+(int) verifier::verify_proof_message(slice in_msg_body) impure {
+    slice payload = in_msg_body~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, in_msg_body.slice_empty?());
 
+    slice compressed = payload~load_ref().begin_parse();
+    slice evaluations = payload~load_ref().begin_parse();
+    cell public = payload~load_ref();
+    slice uncompressed = payload~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, payload.slice_empty?());
+
+    slice ab = compressed~load_ref().begin_parse();
+    slice cz = compressed~load_ref().begin_parse();
+    slice t12 = compressed~load_ref().begin_parse();
+    slice compressed_tail = compressed~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, compressed.slice_empty?());
+
+    slice A = ab~load_bits(384);
+    slice B = ab~load_bits(384);
+    throw_unless(verifier::err::invalid_message, ab.slice_empty?());
+    slice C = cz~load_bits(384);
+    slice Z = cz~load_bits(384);
+    throw_unless(verifier::err::invalid_message, cz.slice_empty?());
+    slice T1 = t12~load_bits(384);
+    slice T2 = t12~load_bits(384);
+    throw_unless(verifier::err::invalid_message, t12.slice_empty?());
+
+    slice t3_wxi = compressed_tail~load_ref().begin_parse();
+    slice wxiw_cell = compressed_tail~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, compressed_tail.slice_empty?());
+    slice T3 = t3_wxi~load_bits(384);
+    slice Wxi = t3_wxi~load_bits(384);
+    throw_unless(verifier::err::invalid_message, t3_wxi.slice_empty?());
+    slice Wxiw = wxiw_cell~load_bits(384);
+    throw_unless(verifier::err::invalid_message, wxiw_cell.slice_empty?());
+
+    slice abc = evaluations~load_ref().begin_parse();
+    slice rest = evaluations~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, evaluations.slice_empty?());
+    int eval_a = abc~load_uint(256);
+    int eval_b = abc~load_uint(256);
+    int eval_c = abc~load_uint(256);
+    throw_unless(verifier::err::invalid_message, abc.slice_empty?());
+    int eval_s1 = rest~load_uint(256);
+    int eval_s2 = rest~load_uint(256);
+    int eval_zw = rest~load_uint(256);
+    throw_unless(verifier::err::invalid_message, rest.slice_empty?());
+
+    slice A_uc_cell = uncompressed~load_ref().begin_parse();
+    slice B_uc_cell = uncompressed~load_ref().begin_parse();
+    slice C_uc_cell = uncompressed~load_ref().begin_parse();
+    slice uncompressed_tail = uncompressed~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, uncompressed.slice_empty?());
+    slice A_uc = A_uc_cell~load_bits(768);
+    slice B_uc = B_uc_cell~load_bits(768);
+    slice C_uc = C_uc_cell~load_bits(768);
+    throw_unless(verifier::err::invalid_message, A_uc_cell.slice_empty?());
+    throw_unless(verifier::err::invalid_message, B_uc_cell.slice_empty?());
+    throw_unless(verifier::err::invalid_message, C_uc_cell.slice_empty?());
+
+    slice Z_uc_cell = uncompressed_tail~load_ref().begin_parse();
+    slice T1_uc_cell = uncompressed_tail~load_ref().begin_parse();
+    slice T2_uc_cell = uncompressed_tail~load_ref().begin_parse();
+    slice uncompressed_tail2 = uncompressed_tail~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, uncompressed_tail.slice_empty?());
+    slice Z_uc = Z_uc_cell~load_bits(768);
+    slice T1_uc = T1_uc_cell~load_bits(768);
+    slice T2_uc = T2_uc_cell~load_bits(768);
+    throw_unless(verifier::err::invalid_message, Z_uc_cell.slice_empty?());
+    throw_unless(verifier::err::invalid_message, T1_uc_cell.slice_empty?());
+    throw_unless(verifier::err::invalid_message, T2_uc_cell.slice_empty?());
+
+    slice T3_uc_cell = uncompressed_tail2~load_ref().begin_parse();
+    slice Wxi_uc_cell = uncompressed_tail2~load_ref().begin_parse();
+    slice Wxiw_uc_cell = uncompressed_tail2~load_ref().begin_parse();
+    throw_unless(verifier::err::invalid_message, uncompressed_tail2.slice_empty?());
+    slice T3_uc = T3_uc_cell~load_bits(768);
+    slice Wxi_uc = Wxi_uc_cell~load_bits(768);
+    slice Wxiw_uc = Wxiw_uc_cell~load_bits(768);
+    throw_unless(verifier::err::invalid_message, T3_uc_cell.slice_empty?());
+    throw_unless(verifier::err::invalid_message, Wxi_uc_cell.slice_empty?());
+    throw_unless(verifier::err::invalid_message, Wxiw_uc_cell.slice_empty?());
+
+    int ok = verify(
+        A, B, C, Z, T1, T2, T3,
+        eval_a, eval_b, eval_c, eval_s1, eval_s2, eval_zw,
+        Wxi, Wxiw,
+        public,
+        A_uc, B_uc, C_uc, Z_uc, T1_uc, T2_uc, T3_uc, Wxi_uc, Wxiw_uc
+    );
+    return ok;
+}
+
+() recv_internal(int msg_value, cell in_msg_full, slice in_msg_body) impure {
+    if (in_msg_body.slice_empty?()) {
+        return ();
+    }
+    slice cs = in_msg_full.begin_parse();
+    int flags = cs~load_uint(4);
+    if (flags & 1) {
+        return ();
+    }
+    int op = in_msg_body~load_uint(32);
+
+    if (op == op::verify) {
+        throw_unless(verifier::err::not_enough_value, msg_value >= verifier::minVerifyValue);
+        throw_unless(verifier::err::invalid_proof, verifier::verify_proof_message(in_msg_body));
+        return ();
+    }
+    throw(0xffff);
 }

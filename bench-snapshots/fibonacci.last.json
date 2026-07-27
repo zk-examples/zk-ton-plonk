@@ -1,9 +1,9 @@
 {
   "gas": {
-    "Deploy": 291
+    "Deploy": 497
   },
   "codeSize": {
-    "fibonacci bits": 22621,
-    "fibonacci cells": 31
+    "fibonacci bits": 26572,
+    "fibonacci cells": 36
   }
 }

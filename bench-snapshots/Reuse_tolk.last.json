@@ -1,11 +1,11 @@
 {
   "gas": {
     "Deploy": 741,
-    "Getter verify": 287388,
-    "Send verify": 295008
+    "Getter verify": 289158,
+    "Send verify": 296879
   },
   "codeSize": {
-    "Reuse_tolk bits": 24632,
+    "Reuse_tolk bits": 24720,
     "Reuse_tolk cells": 43
   }
 }

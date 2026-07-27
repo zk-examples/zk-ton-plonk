@@ -1,11 +1,11 @@
 {
   "gas": {
     "Deploy": 741,
-    "Getter verify": 290294,
-    "Send verify": 297914
+    "Getter verify": 284396,
+    "Send verify": 292117
   },
   "codeSize": {
-    "fibonacci_tolk bits": 24696,
+    "fibonacci_tolk bits": 24784,
     "fibonacci_tolk cells": 42
   }
 }
