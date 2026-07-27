@@ -1,8 +1,8 @@
 {
   "gas": {
     "Deploy": 741,
-    "Getter verify": 284396,
-    "Send verify": 292117
+    "Getter verify": 287492,
+    "Send verify": 295213
   },
   "codeSize": {
     "fibonacci_tolk bits": 24784,

@@ -1,8 +1,8 @@
 {
   "gas": {
     "Deploy": 741,
-    "Getter verify": 310467,
-    "Send verify": 318483
+    "Getter verify": 308625,
+    "Send verify": 316641
   },
   "codeSize": {
     "multiply_three_tolk bits": 26720,

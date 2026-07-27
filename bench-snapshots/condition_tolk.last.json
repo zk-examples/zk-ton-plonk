@@ -1,10 +1,10 @@
 {
   "gas": {
     "Deploy": 741,
-    "Getter verify 1": 290484,
-    "Send verify 1": 298205,
-    "Getter verify 0": 283482,
-    "Send verify 0": 291203
+    "Getter verify 1": 288642,
+    "Send verify 1": 296363,
+    "Getter verify 0": 290706,
+    "Send verify 0": 298427
   },
   "codeSize": {
     "condition_tolk bits": 24720,
