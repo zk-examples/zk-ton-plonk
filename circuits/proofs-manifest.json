@@ -1,0 +1,164 @@
+{
+  "schema": 1,
+  "protocol": "plonk",
+  "curve": "bls12-381",
+  "snarkjs": "0.7.6",
+  "fixtures": {
+    "condition-cond-1": {
+      "input": {
+        "path": "circuits/condition/proofs/condition-cond-1/input.json",
+        "sha256": "6b5e44773e2e90263e3ac590ba3d01a18af922e8774cab7cb024b0eaeb7159d3"
+      },
+      "proof": {
+        "path": "circuits/condition/proofs/condition-cond-1/proof.json",
+        "sha256": "b9ff573720738099554c8dc26fb94460c9b7736bdeaaab602cfcf8fdc4afcf7d"
+      },
+      "publicSignals": {
+        "path": "circuits/condition/proofs/condition-cond-1/public.json",
+        "sha256": "b13a4a3f622fd8b098f237fad9ec17f68480512f4077e81273a185ea63b1765c"
+      },
+      "verificationKey": {
+        "path": "circuits/condition/verification_key.json",
+        "sha256": "ea769df5d524e3222d31666f1c0f7b4c005a6aac7bfac9bb85f76f370f59f9c9"
+      },
+      "wasm": {
+        "path": "circuits/condition/condition_js/condition.wasm",
+        "sha256": "4d85670e75ba4f1a7c3da5c992eaf65cb13a5e6ea50dfab41db8473cebcff7eb"
+      },
+      "zkey": {
+        "path": "circuits/condition/condition_0000.zkey",
+        "sha256": "dfc93253956015792e96546fe5681b1d2072dd135fcb7998cb94fc63c2256978"
+      }
+    },
+    "condition-cond-0": {
+      "input": {
+        "path": "circuits/condition/proofs/condition-cond-0/input.json",
+        "sha256": "36294c87934b55a070b32a8378aa86298cd6df0d54e854f76dd8bbdebd139642"
+      },
+      "proof": {
+        "path": "circuits/condition/proofs/condition-cond-0/proof.json",
+        "sha256": "4189090d8c934c41a9a75f1e62532cdc13b8dc2f33dc86bbb271b9e31fe22c6b"
+      },
+      "publicSignals": {
+        "path": "circuits/condition/proofs/condition-cond-0/public.json",
+        "sha256": "f6ca68c166d0c7dc2e1759066e4d03ce8d774ddbd74f40da9f551bd3e21b4dc2"
+      },
+      "verificationKey": {
+        "path": "circuits/condition/verification_key.json",
+        "sha256": "ea769df5d524e3222d31666f1c0f7b4c005a6aac7bfac9bb85f76f370f59f9c9"
+      },
+      "wasm": {
+        "path": "circuits/condition/condition_js/condition.wasm",
+        "sha256": "4d85670e75ba4f1a7c3da5c992eaf65cb13a5e6ea50dfab41db8473cebcff7eb"
+      },
+      "zkey": {
+        "path": "circuits/condition/condition_0000.zkey",
+        "sha256": "dfc93253956015792e96546fe5681b1d2072dd135fcb7998cb94fc63c2256978"
+      }
+    },
+    "fibonacci-default": {
+      "input": {
+        "path": "circuits/fibonacci/proofs/fibonacci-default/input.json",
+        "sha256": "cfe5cc13f272246c4600db1d129e838c2e4f65ac602cfddf98d1d58899e2bddd"
+      },
+      "proof": {
+        "path": "circuits/fibonacci/proofs/fibonacci-default/proof.json",
+        "sha256": "2545030998bb7f24b9114061fa256463ec09f8cc6e7788e241c14aa9b2ed3c14"
+      },
+      "publicSignals": {
+        "path": "circuits/fibonacci/proofs/fibonacci-default/public.json",
+        "sha256": "67e7b12208b5d40cdebee9299ed6aac8e2e4f07f292509b20bfbce71c12a4d84"
+      },
+      "verificationKey": {
+        "path": "circuits/fibonacci/verification_key.json",
+        "sha256": "7a13a9def0a062a5b812f7a81fb6c7113fe736aca64c9090825b9b968f13cab4"
+      },
+      "wasm": {
+        "path": "circuits/fibonacci/fibonacci_js/fibonacci.wasm",
+        "sha256": "54bd27ec46988c076a9b3200d96d275a180cb4f7b6c25687b1c72a3c15c5f7d3"
+      },
+      "zkey": {
+        "path": "circuits/fibonacci/fibonacci_0000.zkey",
+        "sha256": "00036ad08d708e48331ec5dc3f7ce99c78b5d22907e1c73a65131648d953e69b"
+      }
+    },
+    "multiply-three-default": {
+      "input": {
+        "path": "circuits/multiply_three/proofs/multiply-three-default/input.json",
+        "sha256": "6ad12fe7fe82a6e2291b2cecc0487811dd262673c3cb9040052fbb7eb65f0438"
+      },
+      "proof": {
+        "path": "circuits/multiply_three/proofs/multiply-three-default/proof.json",
+        "sha256": "28623d56c10420d37c6394cf2b51f5c200e980229429fb41ff370f9d603aa837"
+      },
+      "publicSignals": {
+        "path": "circuits/multiply_three/proofs/multiply-three-default/public.json",
+        "sha256": "cfca40e1a0a5dd02b1a7b7e5d75c47487f75e9e4d48eea3f5ba04ebc8de893dd"
+      },
+      "verificationKey": {
+        "path": "circuits/multiply_three/verification_key.json",
+        "sha256": "6b252e2434dd56cdfc29c61a16a040ede5a11e10cc37159411aac53f6f86defc"
+      },
+      "wasm": {
+        "path": "circuits/multiply_three/multiply_three_js/multiply_three.wasm",
+        "sha256": "195bdd9184d7562f0c9df275009d593bb795831a24ddd557b538d1effa870bd3"
+      },
+      "zkey": {
+        "path": "circuits/multiply_three/multiply_three_0000.zkey",
+        "sha256": "8693a7426c91acca17e59ac441eb9b7e529833c26441ebe97ae97d7b06ef3fb6"
+      }
+    },
+    "power-abn-default": {
+      "input": {
+        "path": "circuits/PowerABN/proofs/power-abn-default/input.json",
+        "sha256": "8f86927d07c676a3958cebe69afcb697d1407e9571172fde3d7b429204a7548b"
+      },
+      "proof": {
+        "path": "circuits/PowerABN/proofs/power-abn-default/proof.json",
+        "sha256": "88ca148599139a1b5290179a2f9dcb1556fa3137494c92476d202ecd75633e2b"
+      },
+      "publicSignals": {
+        "path": "circuits/PowerABN/proofs/power-abn-default/public.json",
+        "sha256": "54d19c401b8f3cf7c6d8b9ddebac1b224638e60aa6f341229c672b4fb173faf7"
+      },
+      "verificationKey": {
+        "path": "circuits/PowerABN/verification_key.json",
+        "sha256": "bbee9c72964a0f810e608f3b8ff5e3c10ed2cec321b76f79935a09d7abaac4c8"
+      },
+      "wasm": {
+        "path": "circuits/PowerABN/PowerABN_js/PowerABN.wasm",
+        "sha256": "aabfe2d83938e6b8c03a7cab667561b47d518c8c8934df65d5b8027ef5cdd988"
+      },
+      "zkey": {
+        "path": "circuits/PowerABN/PowerABN_0000.zkey",
+        "sha256": "c863fac490e747be01578a6a3ee6a95fc0cf630ad700cb3705562fa67eabcede"
+      }
+    },
+    "reuse-default": {
+      "input": {
+        "path": "circuits/Reuse/proofs/reuse-default/input.json",
+        "sha256": "69e306f0a16f3f613245b87bac7d0bc01e2bbf4379a6c9fca4c2fdef634ddae8"
+      },
+      "proof": {
+        "path": "circuits/Reuse/proofs/reuse-default/proof.json",
+        "sha256": "841cc3ead8762698ca554971540c9859e0cb02330502170b0b390867c8d7cb83"
+      },
+      "publicSignals": {
+        "path": "circuits/Reuse/proofs/reuse-default/public.json",
+        "sha256": "745c5f8ffdee6e49991e170cf2bb812472a67f7cc9b6a59689dd38c5737cd7ac"
+      },
+      "verificationKey": {
+        "path": "circuits/Reuse/verification_key.json",
+        "sha256": "2498234467a89a3340d0086b5ca06e59e3824f251746c74e5d3b1d37e0cf7075"
+      },
+      "wasm": {
+        "path": "circuits/Reuse/Reuse_js/Reuse.wasm",
+        "sha256": "08b4c68f24d654ea41cc0d1f4068f8a1d722ac3ba9255392db5de535038d3379"
+      },
+      "zkey": {
+        "path": "circuits/Reuse/Reuse_0000.zkey",
+        "sha256": "12a2af5fd94def37ef6ddf69225ac07e4c4fd1756c5ada8bcd4e90bbc36c1471"
+      }
+    }
+  }
+}

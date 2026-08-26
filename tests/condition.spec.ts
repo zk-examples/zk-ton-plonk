@@ -6,14 +6,8 @@ import '@ton/test-utils';
 import { GasLogAndSave } from './gas-logger';
 import { Verifier } from '../wrappers/Verifier_func_plonk';
 
-import * as snarkjs from 'snarkjs';
-import path from 'path';
-
 import { exportPlonkFuncCalldata } from 'export-ton-verifier';
-
-const wasmPath = path.join(__dirname, '../circuits/condition/condition_js', 'condition.wasm');
-const zkeyPath = path.join(__dirname, '../circuits/condition', 'condition_0000.zkey');
-const verificationKey = require('../circuits/condition/verification_key.json');
+import { loadProofFixture } from '../scripts/proofFixtures';
 
 describe('condition', () => {
     let code: Cell;
@@ -52,12 +46,7 @@ describe('condition', () => {
     });
 
     it('should verify when cond=1 (output a)', async () => {
-        const input = { a: '10', b: '20', cond: '1' };
-        const { proof, publicSignals } = await snarkjs.plonk.fullProve(input, wasmPath, zkeyPath);
-        expect(publicSignals).toBeDefined();
-
-        const isVerify = await snarkjs.plonk.verify(verificationKey, publicSignals, proof);
-        expect(isVerify).toBe(true);
+        const { proof, publicSignals } = loadProofFixture('condition-cond-1');
 
         const calldata = await exportPlonkFuncCalldata(proof, publicSignals);
         const res = await verifier.getVerify(calldata);
@@ -65,12 +54,7 @@ describe('condition', () => {
     });
 
     it('should verify when cond=0 (output b)', async () => {
-        const input = { a: '10', b: '20', cond: '0' };
-        const { proof, publicSignals } = await snarkjs.plonk.fullProve(input, wasmPath, zkeyPath);
-        expect(publicSignals).toBeDefined();
-
-        const isVerify = await snarkjs.plonk.verify(verificationKey, publicSignals, proof);
-        expect(isVerify).toBe(true);
+        const { proof, publicSignals } = loadProofFixture('condition-cond-0');
 
         const calldata = await exportPlonkFuncCalldata(proof, publicSignals);
         const res = await verifier.getVerify(calldata);

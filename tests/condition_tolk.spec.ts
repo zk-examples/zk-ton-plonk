@@ -1,13 +1,9 @@
 import { Cell } from '@ton/core';
 import { compile } from '@ton/blueprint';
-import path from 'path';
 
 import { GasLogAndSave } from './gas-logger';
-import { deployVerifier, expectVerifierAcceptsGeneratedProofMessage } from './tolk-verifier-helpers';
-
-const verificationKey = require('../circuits/condition/verification_key.json');
-const wasmPath = path.join(__dirname, '../circuits/condition/condition_js', 'condition.wasm');
-const zkeyPath = path.join(__dirname, '../circuits/condition', 'condition_0000.zkey');
+import { deployVerifier, expectVerifierAcceptsProofMessage } from './tolk-verifier-helpers';
+import { loadProofFixture } from '../scripts/proofFixtures';
 
 describe('condition_tolk', () => {
     let code: Cell;
@@ -23,22 +19,19 @@ describe('condition_tolk', () => {
     });
 
     it.each([
-        ['cond=1 (output a)', { a: '10', b: '20', cond: '1' }],
-        ['cond=0 (output b)', { a: '10', b: '20', cond: '0' }],
-    ])('should call the Tolk verifier with a PLONK proof for %s', async (_name, input) => {
+        ['cond=1 (output a)', 'condition-cond-1'],
+        ['cond=0 (output b)', 'condition-cond-0'],
+    ])('should call the Tolk verifier with a PLONK proof for %s', async (_name, fixtureId) => {
         const { deployer, verifier } = await deployVerifier(code, GAS_LOG);
 
-        await expectVerifierAcceptsGeneratedProofMessage(
+        await expectVerifierAcceptsProofMessage(
             deployer,
             verifier,
-            verificationKey,
-            input,
-            wasmPath,
-            zkeyPath,
+            loadProofFixture(fixtureId),
             {
                 logger: GAS_LOG,
-                getterStepName: `Getter verify ${input.cond}`,
-                messageStepName: `Send verify ${input.cond}`,
+                getterStepName: `Getter verify ${fixtureId}`,
+                messageStepName: `Send verify ${fixtureId}`,
             },
         );
     });

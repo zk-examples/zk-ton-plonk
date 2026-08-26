@@ -1,19 +1,30 @@
 {
     "name": "zk-ton-plonk",
     "version": "0.0.1",
+    "packageManager": "npm@11.13.0",
+    "engines": {
+        "node": "24.16.0"
+    },
     "scripts": {
         "bp": "blueprint",
         "start": "blueprint run",
         "build": "blueprint build",
-        "test": "jest --verbose",
+        "circuits:compile": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/compileCircuits.ps1",
+        "circuits:build": "npm run circuits:compile && ts-node scripts/buildCircuits.ts && npm run proofs:build",
+        "circuits:verify": "ts-node scripts/buildCircuits.ts --verify && npm run proofs:verify",
+        "circuits:check": "npm run circuits:compile && ts-node scripts/buildCircuits.ts --check && npm run proofs:verify",
+        "proofs:build": "ts-node scripts/proofFixtures.ts --build",
+        "proofs:verify": "ts-node scripts/proofFixtures.ts --verify",
+        "pretest": "npm run circuits:verify",
+        "test": "jest --verbose --runInBand",
         "export:verifiers": "ts-node scripts/exportVerifiers.ts",
         "export:verifiers:func": "ts-node scripts/exportVerifiers.ts func",
         "export:verifiers:tolk": "ts-node scripts/exportVerifiers.ts tolk"
     },
     "dependencies": {
         "@ton/core": "~0",
-        "export-ton-verifier": "^3.0.1",
-        "snarkjs": "^0.7.6"
+        "export-ton-verifier": "^3.0.3",
+        "snarkjs": "0.7.6"
     },
     "devDependencies": {
         "@tact-lang/compiler": ">=1.6.13 <2.0.0",

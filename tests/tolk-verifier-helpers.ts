@@ -5,11 +5,9 @@ import '@ton/test-utils';
 import { Verifier } from '../wrappers/Verifier_tolk_plonk';
 import { GasLogAndSave } from './gas-logger';
 
-import * as snarkjs from 'snarkjs';
-
 import { exportPlonkTolkCalldata } from 'export-ton-verifier';
 
-type CircuitInput = Record<string, string | string[]>;
+type ProofPayload = { proof: Record<string, unknown>; publicSignals: string[] };
 type GetterBenchmark = { logger: GasLogAndSave; stepName: string };
 type MessageBenchmark = {
     logger: GasLogAndSave;
@@ -47,31 +45,16 @@ export async function deployVerifier(code: Cell, logger?: GasLogAndSave) {
     return { deployer, verifier };
 }
 
-export async function generateCalldata(
-    input: CircuitInput,
-    wasmPath: string,
-    zkeyPath: string,
-    verificationKey: any,
-): Promise<TupleItem[]> {
-    const { proof, publicSignals } = await snarkjs.plonk.fullProve(input, wasmPath, zkeyPath);
-
-    expect(publicSignals).toBeDefined();
-
-    const isVerify = await snarkjs.plonk.verify(verificationKey, publicSignals, proof);
-    expect(isVerify).toBe(true);
-
-    return exportPlonkTolkCalldata(proof, publicSignals);
+export async function proofCalldata(payload: ProofPayload): Promise<TupleItem[]> {
+    return exportPlonkTolkCalldata(payload.proof, payload.publicSignals);
 }
 
-export async function expectVerifierAcceptsGeneratedProof(
+export async function expectVerifierAcceptsProof(
     verifier: SandboxContract<Verifier>,
-    verificationKey: any,
-    input: CircuitInput,
-    wasmPath: string,
-    zkeyPath: string,
+    payload: ProofPayload,
     benchmark?: GetterBenchmark,
 ) {
-    const calldata = await generateCalldata(input, wasmPath, zkeyPath, verificationKey);
+    const calldata = await proofCalldata(payload);
     const res = await verifier.getVerifyResult(calldata);
 
     expect(res.ok).toBe(true);
@@ -80,16 +63,13 @@ export async function expectVerifierAcceptsGeneratedProof(
     return calldata;
 }
 
-export async function expectVerifierAcceptsGeneratedProofMessage(
+export async function expectVerifierAcceptsProofMessage(
     deployer: SandboxContract<TreasuryContract>,
     verifier: SandboxContract<Verifier>,
-    verificationKey: any,
-    input: CircuitInput,
-    wasmPath: string,
-    zkeyPath: string,
+    payload: ProofPayload,
     benchmark: MessageBenchmark,
 ) {
-    const calldata = await expectVerifierAcceptsGeneratedProof(verifier, verificationKey, input, wasmPath, zkeyPath, {
+    const calldata = await expectVerifierAcceptsProof(verifier, payload, {
         logger: benchmark.logger,
         stepName: benchmark.getterStepName,
     });

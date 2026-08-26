@@ -10,7 +10,6 @@ struct VerifierStorage {}
 
 type ScalarArray = array<uint256>
 type G1Compressed = bits384
-type G1Uncompressed = bits768
 
 /// Internal message that verifies a PLONK proof and aborts unless it is valid.
 struct (0x76524659) VerifyProofMessage {
@@ -60,45 +59,45 @@ struct EvaluationValues {
 }
 
 struct UncompressedTail2 {
-  t3: Cell<G1Uncompressed>
-  wxi: Cell<G1Uncompressed>
-  wxiw: Cell<G1Uncompressed>
+  t3: cell
+  wxi: cell
+  wxiw: cell
 }
 
 struct UncompressedTail {
-  z: Cell<G1Uncompressed>
-  t1: Cell<G1Uncompressed>
-  t2: Cell<G1Uncompressed>
+  z: cell
+  t1: cell
+  t2: cell
   tail: Cell<UncompressedTail2>
 }
 
 struct UncompressedProof {
-  a: Cell<G1Uncompressed>
-  b: Cell<G1Uncompressed>
-  c: Cell<G1Uncompressed>
+  a: cell
+  b: cell
+  c: cell
   tail: Cell<UncompressedTail>
 }
 
 // Compressed G1 points for BLS operations (48 bytes each).
 const QM: slice = "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000".hexToSlice()
-const QL: slice = "850936b18bd6e755f5e3e954209f1b5e5d90503abfa072e53c1bcd026eb25c0ebcd9d193b1e40524f16127c8265af515".hexToSlice()
-const QR: slice = "984d239467c3ec5d5173c15c89cb531ff4dde70f22a5a9d5ef70c052196b2fbe22eaabef1a46f91ee4a2ee6e41f8cc89".hexToSlice()
-const QO: slice = "852592daefeec73516ca747f72f5a579c11e3eedc04dcbe02bb200459b090ace18aa4cad9e55b7ca1354a54092a508d9".hexToSlice()
+const QL: slice = "a3bb05dab58e1a2433d7abd9852f590c1754ca77e19d6ff28f9b98d142530051f3e0cef4c7e2bf6533536d80bcd45949".hexToSlice()
+const QR: slice = "b11d47fd18c096183d0442b32b65db4d379944e0a3e4a3ccdf89da23a621ae7fcbe09ab2cce9273f2f6f591f0e851c18".hexToSlice()
+const QO: slice = "b131260796eb5356eb25d13c92a13f8f2614aa1c35adf80a1aca01ed1524c69a997acde60289396c3608e0c8d1b256d1".hexToSlice()
 const QC: slice = "c00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000".hexToSlice()
-const S1: slice = "80526caef8dbafd94fbccda215aabec58e184ed103add7aa0c626a2c6bedf52d2c999569f41b1db7adb3e221f9c4d8ed".hexToSlice()
-const S2: slice = "86468a1591268ea56272372e36d2bd217e59a57bb659205e423e4f538428436e59fce5550bb37fb7748fadada107eabf".hexToSlice()
-const S3: slice = "b6d1be83af7efc564a3bae5a3c1ce0f3dc1f3eda1191d3b5fae2c8630405f1c7c5497e09aa937f8cb338fc4fae238019".hexToSlice()
-const X_2: slice = "a180b5fee46063d477ed0cca4effeb1eb6f1d4836abdb9d83b67971f06cc2bb4c8a8daf9077a640d31d5404f0d730bb40fa86d981960f9f3c0ae0a1f2e56f158889f6b99077bf12ed67e73b04c7fdd00fa78ed740576789450dcaf0df3e39b70".hexToSlice()
+const S1: slice = "96aca9463cab1c551526ad06ad821c44108fcd77e4127f7ffaebc556e653500b60815129ba81d738627b8eb566823b5c".hexToSlice()
+const S2: slice = "b5ec84b8985868177b065678aa2e29c41acc99bf8678ac5dcdb931c9f13208438a73262675955fd591edb4aaaa8efe15".hexToSlice()
+const S3: slice = "82936168519faaeb5e984c6da54862bac70b4ebbef20e6c8d5c062efe480baddaca85a2007bc48ad91fa7d3fc9e4162b".hexToSlice()
+const X_2: slice = "975acf79f0d4a7c6960ddf376aa397304d8ad6cba703f808e60403565ed6d30d1eaaa26568e2c77d6a136fdd811af6761930ea4a319e972fea9d4234f1ad266c8c46b0fb2ec049013c1bd2dfdcdc758f79b5c9a142d3dd6f480f1504b5dc161e".hexToSlice()
 
 // Uncompressed G1 points for the snarkjs-compatible Keccak256 transcript.
 const QM_UC: slice = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000".hexToSlice()
-const QL_UC: slice = "050936b18bd6e755f5e3e954209f1b5e5d90503abfa072e53c1bcd026eb25c0ebcd9d193b1e40524f16127c8265af5150a70b5bbc530f8f65ee3836e2f833c828bafa191e863c65e4383251586b20548344d0a1e0a43d255fe6d2489f47c7908".hexToSlice()
-const QR_UC: slice = "184d239467c3ec5d5173c15c89cb531ff4dde70f22a5a9d5ef70c052196b2fbe22eaabef1a46f91ee4a2ee6e41f8cc8905f67ff51765c9672aad28394c030268abf504bc4d1b0289e3267188fd23b46f71270998bf0871a67430a7083d773b7d".hexToSlice()
-const QO_UC: slice = "052592daefeec73516ca747f72f5a579c11e3eedc04dcbe02bb200459b090ace18aa4cad9e55b7ca1354a54092a508d90b2934879b6a3fd2ebe9843b7fb668c550ecc79c265ce29258b540dde4c1fb5c430e93c05701518f2f5ae34e39d0801f".hexToSlice()
+const QL_UC: slice = "03bb05dab58e1a2433d7abd9852f590c1754ca77e19d6ff28f9b98d142530051f3e0cef4c7e2bf6533536d80bcd459491150225c587401d8abdfa388eea3a7e2d3c262ad30722ab77d6ef542c979e2dd0f03b0843d9a6ef9fac78b3755b21806".hexToSlice()
+const QR_UC: slice = "111d47fd18c096183d0442b32b65db4d379944e0a3e4a3ccdf89da23a621ae7fcbe09ab2cce9273f2f6f591f0e851c181982e2fa0cf8815c5b184cd7d434ba9626dd8f8ef476efffc08609827ed2c3460fdb98db9b6db45b2a11fdfb9bd1c396".hexToSlice()
+const QO_UC: slice = "1131260796eb5356eb25d13c92a13f8f2614aa1c35adf80a1aca01ed1524c69a997acde60289396c3608e0c8d1b256d1157bf7d133d6e25e1926c1210369ca8bcb03d5ea4c97051ba687c78c42a805919a38000980a622c294c5f826c8de66c3".hexToSlice()
 const QC_UC: slice = "000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000".hexToSlice()
-const S1_UC: slice = "00526caef8dbafd94fbccda215aabec58e184ed103add7aa0c626a2c6bedf52d2c999569f41b1db7adb3e221f9c4d8ed069fa1b8083df965c6b5055c6ee46340b7f5a945decc47ff55c617df8e10e5d41454ec412912c6968101a22ad4adbfc0".hexToSlice()
-const S2_UC: slice = "06468a1591268ea56272372e36d2bd217e59a57bb659205e423e4f538428436e59fce5550bb37fb7748fadada107eabf03e50e9c003beb647f8539b62b33ed6245e9fb1cfb4047213015d33ed401fa451762e8f39446108cb81e558e38cb2e61".hexToSlice()
-const S3_UC: slice = "16d1be83af7efc564a3bae5a3c1ce0f3dc1f3eda1191d3b5fae2c8630405f1c7c5497e09aa937f8cb338fc4fae238019177a7336d4bab32f28b8a468c87ab071aed1a520db615603325b2d0f5f9ef5198575b7dc4188d1d27e53bd1b12f8a53d".hexToSlice()
+const S1_UC: slice = "16aca9463cab1c551526ad06ad821c44108fcd77e4127f7ffaebc556e653500b60815129ba81d738627b8eb566823b5c0187ce95c0089deca4591b8bd126619741da704d08860429256cc9966216cad44fce6261ff8eeb73252030677952f5f1".hexToSlice()
+const S2_UC: slice = "15ec84b8985868177b065678aa2e29c41acc99bf8678ac5dcdb931c9f13208438a73262675955fd591edb4aaaa8efe1510df42bf280ccc8b57d876fb808d76babdea191e77f5379c0191d56de5de5e46a555148fe7d73bc0682b803e6e66842d".hexToSlice()
+const S3_UC: slice = "02936168519faaeb5e984c6da54862bac70b4ebbef20e6c8d5c062efe480baddaca85a2007bc48ad91fa7d3fc9e4162b08be71d52eaa3e046cf87510e3c6213e7648fbd61a7259229c086b15ec47176f4ecbbb118db4ee22ff029209f3c00658".hexToSlice()
 
 const K1: int = 2
 const K2: int = 3
@@ -107,7 +106,7 @@ const W1: int = 3581107354229446301594689255927283699893817174301871416180976762
 const N_PUBLIC: int = 1
 const DOMAIN_SIZE: int = 16
 const N_LAGRANGE: int = 1
-const MIN_VERIFY_VALUE: coins = 50000000
+const MIN_VERIFY_VALUE: coins = 70000000
 
 const BLS_G1: slice = "97f1d3a73197d7942695638c4fa9ac0fc3688c4f9774b905a14e3a3f171bac586c55e83ff97a1aeffb3af00adb22c6bb".hexToSlice()
 const BLS_G2: slice = "93e02b6052719f607dacd3a088274f65596bd0d09920b61ab5da61bbdc7f5049334cf11213945d57e5ac7d055d042b7e024aa2b2f08f0a91260805272dc51051c6e47ad4fa403b02b4510b647ae3d1770bac0326a805bbefd48056c8c121bdb8".hexToSlice()
@@ -163,6 +162,16 @@ fun blsG1Sub(a: slice, b: slice): slice asm "BLS_G1_SUB";
 @pure
 fun blsG1Neg(a: slice): slice asm "BLS_G1_NEG";
 
+/// # Safety
+/// Returns false for invalid or non-prime-order BLS12-381 G1 encodings.
+@pure
+fun blsG1InGroup(x: slice): bool asm "BLS_G1_INGROUP";
+
+/// # Safety
+/// Returns true only for the canonical BLS12-381 G1 identity encoding.
+@pure
+fun blsG1IsZero(x: slice): bool asm "BLS_G1_ISZERO";
+
 fun normalizeMod(x: int, z: int): int {
   var res: int = x % z;
   if (res < 0) {
@@ -176,10 +185,6 @@ fun addmod(x: int, y: int, z: int): int {
 }
 
 fun G1Compressed.asSlice(self): slice {
-  return self as slice;
-}
-
-fun G1Uncompressed.asSlice(self): slice {
   return self as slice;
 }
 
@@ -263,6 +268,291 @@ fun checkField(x: int): void {
   }
 }
 
+fun checkProofPoint(point: slice): void {
+  if (point.remainingBitsCount() != 384 || point.remainingRefsCount() != 0) {
+    throw VerifierErrors.InvalidProof;
+  }
+  if (!blsG1InGroup(point) || blsG1IsZero(point)) {
+    throw VerifierErrors.InvalidProof;
+  }
+}
+
+@inline
+fun lessThanSixLimbs(
+  mutate encoded: slice,
+  limb5: int,
+  limb4: int,
+  limb3: int,
+  limb2: int,
+  limb1: int,
+  limb0: int
+): bool {
+  var decided: bool = false;
+  var result: bool = false;
+  var value = encoded.loadUint(64);
+  if (!decided && value != limb5) {
+    result = value < limb5;
+    decided = true;
+  }
+  value = encoded.loadUint(64);
+  if (!decided && value != limb4) {
+    result = value < limb4;
+    decided = true;
+  }
+  value = encoded.loadUint(64);
+  if (!decided && value != limb3) {
+    result = value < limb3;
+    decided = true;
+  }
+  value = encoded.loadUint(64);
+  if (!decided && value != limb2) {
+    result = value < limb2;
+    decided = true;
+  }
+  value = encoded.loadUint(64);
+  if (!decided && value != limb1) {
+    result = value < limb1;
+    decided = true;
+  }
+  value = encoded.loadUint(64);
+  if (!decided && value != limb0) {
+    result = value < limb0;
+    decided = true;
+  }
+  encoded.assertEnd();
+  return result;
+}
+
+@inline
+fun lessThanBaseField(encoded: slice): bool {
+  return lessThanSixLimbs(
+    mutate encoded,
+    0x1a0111ea397fe69a, 0x4b1ba7b6434bacd7,
+    0x64774b84f38512bf, 0x6730d2a0f6b0f624,
+    0x1eabfffeb153ffff, 0xb9feffffffffaaab
+  );
+}
+
+@inline
+fun lessThanHalfBaseField(encoded: slice): bool {
+  return lessThanSixLimbs(
+    mutate encoded,
+    0x0d0088f51cbff34d, 0x258dd3db21a5d66b,
+    0xb23ba5c279c2895f, 0xb39869507b587b12,
+    0x0f55ffff58a9ffff, 0xdcff7fffffffd556
+  );
+}
+
+@inline
+fun sameCompressedX(compressed: slice, x: slice): bool {
+  var compressedReader = compressed;
+  var xReader = x;
+  val first = compressedReader.loadUint(64);
+  var same = first % 2305843009213693952 == xReader.loadUint(64);
+  var i: int = 0;
+  while (i < 5) {
+    if (compressedReader.loadUint(64) != xReader.loadUint(64)) {
+      same = false;
+    }
+    i += 1;
+  }
+  compressedReader.assertEnd();
+  xReader.assertEnd();
+  return same;
+}
+
+@inline
+fun sliceIsZero(mutate encoded: slice, n: int): bool {
+  var aggregate: int = 0;
+  var i: int = 0;
+  while (i < n) {
+    aggregate |= encoded.loadUint(64);
+    i += 1;
+  }
+  encoded.assertEnd();
+  return aggregate == 0;
+}
+
+@inline
+fun addModSafe(a: int, b: int, modulus: int): int {
+  if (a >= modulus - b) {
+    return a - (modulus - b);
+  }
+  return a + b;
+}
+
+@inline
+fun sliceResidue(mutate encoded: slice, n: int, modulus: int): int {
+  var residue: int = 0;
+  var i: int = 0;
+  while (i < n) {
+    residue = addModSafe(
+      mulmod(residue, 340282366920938463463374607431768211456, modulus),
+      encoded.loadUint(128),
+      modulus
+    );
+    i += 1;
+  }
+  encoded.assertEnd();
+  return residue;
+}
+
+@inline
+fun checkEquationMod(
+  x: slice,
+  y: slice,
+  quotient: slice,
+  negative: bool,
+  modulus: int,
+  pModulus: int
+): void {
+  val xr = sliceResidue(mutate x, 3, modulus);
+  val yr = sliceResidue(mutate y, 3, modulus);
+  val qr = sliceResidue(mutate quotient, 6, modulus);
+  val x3 = mulmod(mulmod(xr, xr, modulus), xr, modulus);
+  val y2 = mulmod(yr, yr, modulus);
+  val qp = mulmod(qr, pModulus, modulus);
+  var lhs = addModSafe(x3, 4, modulus);
+  if (negative) {
+    lhs = addModSafe(lhs, qp, modulus);
+    if (lhs != y2) {
+      throw VerifierErrors.InvalidProof;
+    }
+  } else if (lhs != addModSafe(y2, qp, modulus)) {
+    throw VerifierErrors.InvalidProof;
+  }
+}
+
+@inline
+fun sliceResidue128(mutate encoded: slice, n: int): int {
+  val modulus = 340282366920938463463374607431768211455;
+  var residue: int = 0;
+  var i: int = 0;
+  while (i < n) {
+    var chunk = encoded.loadUint(128);
+    if (chunk == modulus) {
+      chunk = 0;
+    }
+    residue = addModSafe(residue, chunk, modulus);
+    i += 1;
+  }
+  encoded.assertEnd();
+  return residue;
+}
+
+@inline
+fun checkEquationMod128(
+  x: slice,
+  y: slice,
+  quotient: slice,
+  negative: bool
+): void {
+  val modulus = 340282366920938463463374607431768211455;
+  val xr = sliceResidue128(mutate x, 3);
+  val yr = sliceResidue128(mutate y, 3);
+  val qr = sliceResidue128(mutate quotient, 6);
+  val x3 = mulmod(mulmod(xr, xr, modulus), xr, modulus);
+  val y2 = mulmod(yr, yr, modulus);
+  val qp = mulmod(qr, 208877612993915134671969646143013146022, modulus);
+  var lhs = addModSafe(x3, 4, modulus);
+  if (negative) {
+    lhs = addModSafe(lhs, qp, modulus);
+    if (lhs != y2) {
+      throw VerifierErrors.InvalidProof;
+    }
+  } else if (lhs != addModSafe(y2, qp, modulus)) {
+    throw VerifierErrors.InvalidProof;
+  }
+}
+
+fun checkCurveEquation(
+  x: slice,
+  y: slice,
+  quotient: slice,
+  negative: bool
+): void {
+  // The five pairwise-coprime moduli have a 1150-bit product. With canonical
+  // x,y < p and a 768-bit |q|, |x^3 + 4 - y^2 - q*p| is below 2^1150,
+  // so equality modulo all five is equivalent to exact integer equality.
+  checkEquationMod(
+    x, y, quotient, negative,
+    115792089237316195423570985008687907853269984665640564039457584007908834671663,
+    45442060874369865957053122457214185817766951338729763812469558174980632365874
+  );
+  checkEquationMod(
+    x, y, quotient, negative,
+    115792089210356248762697446949407573530086143415290314195533631308867097853951,
+    38110890092560713635066568006917044494578826803373145873585304601562188213582
+  );
+  checkEquationMod(
+    x, y, quotient, negative,
+    57896044618658097711785492504343953926634992332820282019728792003956564819949,
+    45442060874369865957053122457065728163911979137268805490623197713172086346389
+  );
+  checkEquationMod(
+    x, y, quotient, negative,
+    52435875175126190479447740508185965837690552500527637822603658699938581184513,
+    52435875175126190479447740508185965837690552500527637822588526323715639541761
+  );
+  checkEquationMod128(x, y, quotient, negative);
+}
+
+/// Validates that TVM compressed bytes and snarkjs transcript coordinates
+/// encode the same canonical, non-identity prime-order G1 point.
+fun checkPointBinding(compressed: slice, transcriptPoint: slice): slice {
+  if (
+    transcriptPoint.remainingBitsCount() != 768 ||
+    transcriptPoint.remainingRefsCount() != 1
+  ) {
+    throw VerifierErrors.InvalidProof;
+  }
+
+  var transcript = transcriptPoint;
+  val coordinates = transcript.loadBits(768);
+  var witness = transcript.loadRef().beginParse();
+  transcript.assertEnd();
+  if (witness.remainingBitsCount() != 769 || witness.remainingRefsCount() != 0) {
+    throw VerifierErrors.InvalidProof;
+  }
+  val negative = witness.loadBool();
+  val quotient = witness.loadBits(768);
+  witness.assertEnd();
+  var quotientZeroReader = quotient;
+  if (negative && sliceIsZero(mutate quotientZeroReader, 12)) {
+    throw VerifierErrors.InvalidProof;
+  }
+
+  var coordinateReader = coordinates;
+  val xEncoded = coordinateReader.loadBits(384);
+  val yEncoded = coordinateReader.loadBits(384);
+  coordinateReader.assertEnd();
+  if (!lessThanBaseField(xEncoded) || !lessThanBaseField(yEncoded)) {
+    throw VerifierErrors.InvalidProof;
+  }
+
+  if (compressed.remainingBitsCount() != 384 || compressed.remainingRefsCount() != 0) {
+    throw VerifierErrors.InvalidProof;
+  }
+  var compressedReader = compressed;
+  val first = compressedReader.loadUint(64);
+  val topByte = first / 72057594037927936;
+  val flags = (topByte / 32) * 32;
+  if (flags != 0x80 && flags != 0xa0) {
+    throw VerifierErrors.InvalidProof;
+  }
+  if (!sameCompressedX(compressed, xEncoded)) {
+    throw VerifierErrors.InvalidProof;
+  }
+  val upperY = !lessThanHalfBaseField(yEncoded);
+  if ((flags == 0xa0) != upperY) {
+    throw VerifierErrors.InvalidProof;
+  }
+
+  checkCurveEquation(xEncoded, yEncoded, quotient, negative);
+
+  return coordinates;
+}
+
 fun checkPublicInputCount(publicInputs: ScalarArray, nExpected: int): void {
   val count = publicInputs.size();
   if (count > nExpected) {
@@ -272,6 +562,120 @@ fun checkPublicInputCount(publicInputs: ScalarArray, nExpected: int): void {
   if (count != nExpected) {
     throw VerifierErrors.PublicNotPresent;
   }
+}
+
+fun requireMessageShape(value: slice, bits: int, refs: int): void {
+  if (
+    value.remainingBitsCount() != bits ||
+    value.remainingRefsCount() != refs
+  ) {
+    throw VerifierErrors.InvalidMessage;
+  }
+}
+
+fun validateTranscriptCell(value: cell): void {
+  var reader = value.beginParse();
+  requireMessageShape(reader, 768, 1);
+  val _coordinates = reader.loadBits(768);
+  val witness = reader.loadRef().beginParse();
+  reader.assertEnd();
+  requireMessageShape(witness, 769, 0);
+}
+
+fun validatePublicInputEncoding(mutate payload: slice): void {
+  val length = payload.loadUint(8);
+  val hasFirst = payload.loadBool();
+  if (length != N_PUBLIC || hasFirst != (N_PUBLIC > 0)) {
+    throw VerifierErrors.InvalidMessage;
+  }
+  if (N_PUBLIC == 0) {
+    return;
+  }
+
+  var chunk = payload.loadRef().beginParse();
+  var remaining = N_PUBLIC;
+  while (remaining > 0) {
+    val count = remaining > 3 ? 3 : remaining;
+    val hasNext = remaining > 3;
+    requireMessageShape(chunk, 1 + count * 256, hasNext ? 1 : 0);
+    if (chunk.loadBool() != hasNext) {
+      throw VerifierErrors.InvalidMessage;
+    }
+    val _values = chunk.loadBits(count * 256);
+    remaining -= count;
+    if (hasNext) {
+      chunk = chunk.loadRef().beginParse();
+    } else {
+      chunk.assertEnd();
+    }
+  }
+}
+
+fun validateProofMessageShape(body: slice): void {
+  var message = body;
+  requireMessageShape(message, 32, 1);
+  if (message.loadUint(32) != 0x76524659) {
+    throw VerifierErrors.InvalidMessage;
+  }
+  var payload = message.loadRef().beginParse();
+  message.assertEnd();
+  requireMessageShape(payload, 9, 4);
+
+  var compressed = payload.loadRef().beginParse();
+  var evaluations = payload.loadRef().beginParse();
+  validatePublicInputEncoding(mutate payload);
+  var uncompressed = payload.loadRef().beginParse();
+  payload.assertEnd();
+
+  requireMessageShape(compressed, 0, 4);
+  val ab = compressed.loadRef().beginParse();
+  val cz = compressed.loadRef().beginParse();
+  val t12 = compressed.loadRef().beginParse();
+  var compressedTail = compressed.loadRef().beginParse();
+  compressed.assertEnd();
+  requireMessageShape(ab, 768, 0);
+  requireMessageShape(cz, 768, 0);
+  requireMessageShape(t12, 768, 0);
+  requireMessageShape(compressedTail, 0, 2);
+  val t3Wxi = compressedTail.loadRef().beginParse();
+  val wxiw = compressedTail.loadRef().beginParse();
+  compressedTail.assertEnd();
+  requireMessageShape(t3Wxi, 768, 0);
+  requireMessageShape(wxiw, 384, 0);
+
+  requireMessageShape(evaluations, 0, 2);
+  val abc = evaluations.loadRef().beginParse();
+  val rest = evaluations.loadRef().beginParse();
+  evaluations.assertEnd();
+  requireMessageShape(abc, 768, 0);
+  requireMessageShape(rest, 768, 0);
+
+  requireMessageShape(uncompressed, 0, 4);
+  val a = uncompressed.loadRef();
+  val b = uncompressed.loadRef();
+  val c = uncompressed.loadRef();
+  var uncompressedTail = uncompressed.loadRef().beginParse();
+  uncompressed.assertEnd();
+  validateTranscriptCell(a);
+  validateTranscriptCell(b);
+  validateTranscriptCell(c);
+  requireMessageShape(uncompressedTail, 0, 4);
+  val z = uncompressedTail.loadRef();
+  val t1 = uncompressedTail.loadRef();
+  val t2 = uncompressedTail.loadRef();
+  var uncompressedTail2 = uncompressedTail.loadRef().beginParse();
+  uncompressedTail.assertEnd();
+  validateTranscriptCell(z);
+  validateTranscriptCell(t1);
+  validateTranscriptCell(t2);
+  requireMessageShape(uncompressedTail2, 0, 3);
+  val t3 = uncompressedTail2.loadRef();
+  val wxi = uncompressedTail2.loadRef();
+  val wxiwTranscript = uncompressedTail2.loadRef();
+  uncompressedTail2.assertEnd();
+  validateTranscriptCell(t3);
+  validateTranscriptCell(wxi);
+  validateTranscriptCell(wxiwTranscript);
 }
 
 fun verifyFromPayload(payload: VerifyProofPayload): bool {
@@ -297,15 +701,16 @@ fun verifyFromPayload(payload: VerifyProofPayload): bool {
     rest.evalS1 as int, rest.evalS2 as int, rest.evalZw as int,
     t3Wxi.second.asSlice(), compressedTail.wxiw.load().asSlice(),
     payload.publicInputs,
-    uncompressed.a.load().asSlice(), uncompressed.b.load().asSlice(), uncompressed.c.load().asSlice(),
-    uncompressedTail.z.load().asSlice(), uncompressedTail.t1.load().asSlice(), uncompressedTail.t2.load().asSlice(),
-    uncompressedTail2.t3.load().asSlice(), uncompressedTail2.wxi.load().asSlice(), uncompressedTail2.wxiw.load().asSlice()
+    uncompressed.a.beginParse(), uncompressed.b.beginParse(), uncompressed.c.beginParse(),
+    uncompressedTail.z.beginParse(), uncompressedTail.t1.beginParse(), uncompressedTail.t2.beginParse(),
+    uncompressedTail2.t3.beginParse(), uncompressedTail2.wxi.beginParse(), uncompressedTail2.wxiw.beginParse()
   );
 }
 
 fun onInternalMessage(inMsg: InMessage) {
   if (!inMsg.body.isEmpty()) {
     assert (inMsg.valueCoins >= MIN_VERIFY_VALUE) throw VerifierErrors.NotEnoughValue;
+    validateProofMessageShape(inMsg.body);
     val msg = VerifyProofMessage.fromSlice(inMsg.body, { throwIfOpcodeDoesNotMatch: VerifierErrors.InvalidMessage });
     assert (verifyFromPayload(msg.proof.load())) throw VerifierErrors.InvalidProof;
   }
@@ -321,6 +726,26 @@ get fun verify(
   t1Uc: slice, t2Uc: slice, t3Uc: slice,
   wxiUc: slice, wxiwUc: slice
 ): bool {
+  checkProofPoint(a);
+  checkProofPoint(b);
+  checkProofPoint(c);
+  checkProofPoint(z);
+  checkProofPoint(t1);
+  checkProofPoint(t2);
+  checkProofPoint(t3);
+  checkProofPoint(wxi);
+  checkProofPoint(wxiw);
+
+  val aTranscript = checkPointBinding(a, aUc);
+  val bTranscript = checkPointBinding(b, bUc);
+  val cTranscript = checkPointBinding(c, cUc);
+  val zTranscript = checkPointBinding(z, zUc);
+  val t1Transcript = checkPointBinding(t1, t1Uc);
+  val t2Transcript = checkPointBinding(t2, t2Uc);
+  val t3Transcript = checkPointBinding(t3, t3Uc);
+  val wxiTranscript = checkPointBinding(wxi, wxiUc);
+  val wxiwTranscript = checkPointBinding(wxiw, wxiwUc);
+
   checkField(evalA);
   checkField(evalB);
   checkField(evalC);
@@ -341,14 +766,16 @@ get fun verify(
 
   var pi: int = 0;
   while (pi < N_PUBLIC) {
-    betaHash.push(publicInputs.read(pi).scalarToSlice());
+    val publicInput = publicInputs.read(pi);
+    checkField(publicInput);
+    betaHash.push(publicInput.scalarToSlice());
     pi += 1;
   }
   checkPublicInputCount(publicInputs, N_PUBLIC);
 
-  betaHash.push(aUc);
-  betaHash.push(bUc);
-  betaHash.push(cUc);
+  betaHash.push(aTranscript);
+  betaHash.push(bTranscript);
+  betaHash.push(cTranscript);
 
   val beta = keccak256Tuple(betaHash) % blsR();
 
@@ -361,7 +788,7 @@ get fun verify(
   var alphaHash: tuple = [];
   alphaHash.push(beta.scalarToSlice());
   alphaHash.push(gamma.scalarToSlice());
-  alphaHash.push(zUc);
+  alphaHash.push(zTranscript);
   val alpha = keccak256Tuple(alphaHash) % blsR();
 
   val alpha2 = mulmod(alpha, alpha, blsR());
@@ -369,9 +796,9 @@ get fun verify(
   // Challenge round 4: xi.
   var xiHash: tuple = [];
   xiHash.push(alpha.scalarToSlice());
-  xiHash.push(t1Uc);
-  xiHash.push(t2Uc);
-  xiHash.push(t3Uc);
+  xiHash.push(t1Transcript);
+  xiHash.push(t2Transcript);
+  xiHash.push(t3Transcript);
   val xi = keccak256Tuple(xiHash) % blsR();
 
   val betaXi = mulmod(beta, xi, blsR());
@@ -404,8 +831,8 @@ get fun verify(
 
   // Challenge: u.
   var uHash: tuple = [];
-  uHash.push(wxiUc);
-  uHash.push(wxiwUc);
+  uHash.push(wxiTranscript);
+  uHash.push(wxiwTranscript);
   val u = keccak256Tuple(uHash) % blsR();
 
   // Lagrange evaluations.

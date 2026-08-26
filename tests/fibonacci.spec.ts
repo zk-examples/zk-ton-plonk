@@ -6,14 +6,8 @@ import '@ton/test-utils';
 import { GasLogAndSave } from './gas-logger';
 import { Verifier } from '../wrappers/Verifier_func_plonk';
 
-import * as snarkjs from 'snarkjs';
-import path from 'path';
-
 import { exportPlonkFuncCalldata } from 'export-ton-verifier';
-
-const wasmPath = path.join(__dirname, '../circuits/fibonacci/fibonacci_js', 'fibonacci.wasm');
-const zkeyPath = path.join(__dirname, '../circuits/fibonacci', 'fibonacci_0000.zkey');
-const verificationKey = require('../circuits/fibonacci/verification_key.json');
+import { loadProofFixture } from '../scripts/proofFixtures';
 
 describe('fibonacci', () => {
     let code: Cell;
@@ -52,12 +46,7 @@ describe('fibonacci', () => {
     });
 
     it('should verify fibonacci(10) with in=[1,1]', async () => {
-        const input = { in: ['1', '1'] };
-        const { proof, publicSignals } = await snarkjs.plonk.fullProve(input, wasmPath, zkeyPath);
-        expect(publicSignals).toBeDefined();
-
-        const isVerify = await snarkjs.plonk.verify(verificationKey, publicSignals, proof);
-        expect(isVerify).toBe(true);
+        const { proof, publicSignals } = loadProofFixture('fibonacci-default');
 
         const calldata = await exportPlonkFuncCalldata(proof, publicSignals);
         const res = await verifier.getVerify(calldata);

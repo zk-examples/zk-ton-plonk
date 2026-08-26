@@ -6,14 +6,8 @@ import '@ton/test-utils';
 import { GasLogAndSave } from './gas-logger';
 import { Verifier } from '../wrappers/Verifier_func_plonk';
 
-import * as snarkjs from 'snarkjs';
-import path from 'path';
-
 import { exportPlonkFuncCalldata } from 'export-ton-verifier';
-
-const wasmPath = path.join(__dirname, '../circuits/Reuse/Reuse_js', 'Reuse.wasm');
-const zkeyPath = path.join(__dirname, '../circuits/Reuse', 'Reuse_0000.zkey');
-const verificationKey = require('../circuits/Reuse/verification_key.json');
+import { loadProofFixture } from '../scripts/proofFixtures';
 
 describe('Reuse', () => {
     let code: Cell;
@@ -52,18 +46,8 @@ describe('Reuse', () => {
     });
 
     it('should verify', async () => {
-        const input = {
-            a: '534',
-            b: '43',
-            c: '423',
-        };
-        const { proof, publicSignals } = await snarkjs.plonk.fullProve(input, wasmPath, zkeyPath);
+        const { proof, publicSignals } = loadProofFixture('reuse-default');
         console.log('Public Signals:', publicSignals);
-        // console.log('Proof:', JSON.stringify(proof, null, 2));
-
-        const isVerify = await snarkjs.plonk.verify(verificationKey, publicSignals, proof);
-        console.log('snarkjs verification:', isVerify);
-        expect(isVerify).toBe(true);
 
         const calldata = await exportPlonkFuncCalldata(proof, publicSignals);
 

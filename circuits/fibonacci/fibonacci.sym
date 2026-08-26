@@ -1,0 +1,13 @@
+1,1,0,main.out
+2,2,0,main.in[0]
+3,3,0,main.in[1]
+4,-1,0,main.fib[0]
+5,-1,0,main.fib[1]
+6,4,0,main.fib[2]
+7,5,0,main.fib[3]
+8,6,0,main.fib[4]
+9,7,0,main.fib[5]
+10,8,0,main.fib[6]
+11,9,0,main.fib[7]
+12,10,0,main.fib[8]
+13,-1,0,main.fib[9]

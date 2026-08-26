@@ -1,165 +1,63 @@
 # zk-ton-plonk
 
-**Note: This is an experimental repository!**
+**This is an experimental repository.**
 
-This repository demonstrates **PLONK** zero-knowledge proof verification on the TON blockchain. Verifiers are generated from **Circom** circuits and implemented in **FunC** and **Tolk** using [export-ton-verifier](https://www.npmjs.com/package/export-ton-verifier).
+This repository demonstrates PLONK proof verification on TON. The same Circom circuits are exported to FunC and Tolk with `export-ton-verifier` and exercised through both getters and internal messages.
 
-Gas cost results are in the `bench-snapshots` directory.
+For Groth16 examples, see [zk-ton-examples](https://github.com/zk-examples/zk-ton-example). For the TON verifier model, see the [TON zero-knowledge documentation](https://docs.ton.org/contract-dev/zero-knowledge).
 
-For Groth16-based verification (Circom, Noname, Gnark, Arkworks) see: [zk-examples/zk-ton-example](https://github.com/zk-examples/zk-ton-example).
+## Reproducible circuit artifacts
 
-For more details, see the [TON documentation on zk-proofs](https://docs.ton.org/contract-dev/zero-knowledge).
-
-## How to create
+For normal development, install the exact dependencies and verify the checked-in artifacts without recompiling circuits or recreating proving keys:
 
 ```sh
-npm create ton@latest
-
-npm install snarkjs @types/snarkjs
-npm install export-ton-verifier@latest
+npm ci
+npm run circuits:verify
 ```
 
-## How to use
+`npm test` runs this fast manifest-backed verification automatically. It hashes every tracked source, R1CS, SYM, WASM, ZKey, verification key, Powers of Tau transcript, proof input, proof, and public-signal file. It also verifies every proof with snarkjs and confirms that a tampered proof is rejected. It does not invoke Circom, proving, or PLONK setup.
+
+To deliberately reproduce every artifact from source, run:
+
+```sh
+npm run circuits:build
+npm run circuits:check
+```
+
+`circuits:build` performs the following steps:
+
+1. Downloads the official Circom 2.2.3 Windows release when it is not cached locally and verifies SHA-256 `e43f132ee6f0aa79b705beceb59c2a7e6a54d7bdeab917ca34e9fc1951d185e1` before execution. Set `CIRCOM_BIN` to an existing copy of that exact binary to avoid the download.
+2. Compiles all circuits for `bls12381`, producing R1CS, SYM, witness JavaScript, and WASM files.
+3. Verifies `circuits/bls12-381-pot8-final.ptau` with snarkjs 0.7.6.
+4. Recreates every PLONK ZKey and verification key.
+5. Generates and verifies six real proof fixtures covering all five circuits.
+6. Writes SHA-256 hashes for sources, tools, the Powers of Tau transcript, all generated circuit artifacts, proof inputs, proofs, and public signals to manifests under `circuits/`.
+
+`circuits:check` repeats compilation and PLONK setup in a temporary directory and rejects any byte difference from the manifest. It is the explicit full-reproducibility gate and is not part of the ordinary test loop.
+
+The checked-in Powers of Tau transcript is a small, single-machine development SRS with a CSPRNG contribution and final beacon. It is sufficient for reproducible tests, but it is not a substitute for an independently audited multi-party ceremony for production deployments. Do not replace it with deterministic or publicly known setup entropy.
+
+PLONK proofs use fresh blinding randomness, so `npm run circuits:build` is semantically reproducible but does not promise byte-identical proof JSON. The newly generated proofs are verified before being recorded; a clean clone verifies the committed snapshots and their hashes without recomputing them.
+
+The five circuits cover conditional selection, Fibonacci evaluation, three-factor multiplication, exponentiation, and component reuse. Their artifacts live next to each `.circom` source under `circuits/`.
+
+## Generate contracts and wrappers
 
 ```sh
 npm run export:verifiers
-npm run export:verifiers:func
-npm run export:verifiers:tolk
-npm run sync:fift
+npx export-ton-verifier import-wrapper wrappers/Verifier_func_plonk.ts --plonk --func --force
+npx export-ton-verifier import-wrapper wrappers/Verifier_tolk_plonk.ts --plonk --tolk --force
 ```
 
-`export:verifiers` generates both FunC (`.fc`) and Tolk (`.tolk`) contracts. Use the `:func` or `:tolk` variants to export only one target language.
+`export:verifiers` regenerates all FunC and Tolk contracts. The wrappers and contracts share opcode `0x76524659`, cell layout, minimum attached value, and error semantics. Internal-message verification requires at least `0.07 TON`.
 
-`sync:fift` rebuilds the supported Blueprint contracts and copies their generated Fift output from `build/<name>/<name>.fif` into checked-in `contracts/*.fif` files. In this repo's Blueprint version, `.fif` is an output artifact, not a native source language, so this is the safest way to keep manual Fift copies in sync.
-
-### Condition (circom)
-
-Select: `out = cond ? a : b` with `cond ∈ {0, 1}`.
-
-```sh
-mkdir -p circuits/condition
-cd circuits/condition
-
-# compile circuit
-circom condition.circom --r1cs --wasm --sym --prime bls12381
-
-# trusted setup (PLONK)
-snarkjs powersoftau new bls12-381 5 pot5_0000.ptau -v
-snarkjs powersoftau contribute pot5_0000.ptau pot5_0001.ptau --name="First contribution" -v -e="some random text"
-snarkjs powersoftau prepare phase2 pot5_0001.ptau pot5_final.ptau -v
-snarkjs plonk setup condition.r1cs pot5_final.ptau condition_0000.zkey
-snarkjs zkey export verificationkey condition_0000.zkey verification_key.json
-
-cd ../..
-
-# export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/condition/condition_0000.zkey ./contracts/condition.tolk
-npx export-ton-verifier ./circuits/condition/condition_0000.zkey ./contracts/condition.fc --func
-```
-
-### Fibonacci (circom)
-
-Computes the n-th Fibonacci number (here n=10) from initial values `in[0]`, `in[1]`.
-
-```sh
-mkdir -p circuits/fibonacci
-cd circuits/fibonacci
-
-# compile circuit
-circom fibonacci.circom --r1cs --wasm --sym --prime bls12381
-
-# trusted setup (PLONK)
-snarkjs powersoftau new bls12-381 5 pot5_0000.ptau -v
-snarkjs powersoftau contribute pot5_0000.ptau pot5_0001.ptau --name="First contribution" -v -e="some random text"
-snarkjs powersoftau prepare phase2 pot5_0001.ptau pot5_final.ptau -v
-snarkjs plonk setup fibonacci.r1cs pot5_final.ptau fibonacci_0000.zkey
-snarkjs zkey export verificationkey fibonacci_0000.zkey verification_key.json
-
-cd ../..
-
-# export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/fibonacci/fibonacci_0000.zkey ./contracts/fibonacci.tolk
-npx export-ton-verifier ./circuits/fibonacci/fibonacci_0000.zkey ./contracts/fibonacci.fc --func
-```
-
-### MultiplyThree (circom)
-
-Computes `d = a * b * c` with public inputs `a` and `c`.
-
-```sh
-mkdir -p circuits/multiply_three
-cd circuits/multiply_three
-
-# compile circuit
-circom multiply_three.circom --r1cs --wasm --sym --prime bls12381
-
-# trusted setup (PLONK)
-snarkjs powersoftau new bls12-381 5 pot5_0000.ptau -v
-snarkjs powersoftau contribute pot5_0000.ptau pot5_0001.ptau --name="First contribution" -v -e="some random text"
-snarkjs powersoftau prepare phase2 pot5_0001.ptau pot5_final.ptau -v
-snarkjs plonk setup multiply_three.r1cs pot5_final.ptau multiply_three_0000.zkey
-snarkjs zkey export verificationkey multiply_three_0000.zkey verification_key.json
-
-cd ../..
-
-# export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/multiply_three/multiply_three_0000.zkey ./contracts/multiply_three.tolk
-npx export-ton-verifier ./circuits/multiply_three/multiply_three_0000.zkey ./contracts/multiply_three.fc --func
-```
-
-### PowerABN (circom)
-
-Computes `c = a^N * b^N` (here N=32). Small circuits can reuse the same ptau; larger constraints may require a higher powersoftau size.
-
-```sh
-mkdir -p circuits/PowerABN
-cd circuits/PowerABN
-
-# compile circuit
-circom PowerABN.circom --r1cs --wasm --sym --prime bls12381
-
-# trusted setup (PLONK)
-snarkjs powersoftau new bls12-381 8 pot8_0000.ptau -v
-snarkjs powersoftau contribute pot8_0000.ptau pot8_0001.ptau --name="First contribution" -v -e="some random text"
-snarkjs powersoftau prepare phase2 pot8_0001.ptau pot8_final.ptau -v
-snarkjs plonk setup PowerABN.r1cs pot8_final.ptau PowerABN_0000.zkey
-snarkjs zkey export verificationkey PowerABN_0000.zkey verification_key.json
-
-cd ../..
-
-# export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/PowerABN/PowerABN_0000.zkey ./contracts/PowerABN.tolk
-npx export-ton-verifier ./circuits/PowerABN/PowerABN_0000.zkey ./contracts/PowerABN.fc --func
-```
-
-### Reuse (circom)
-
-Computes `out = a * b * c` by reusing a multiplier component.
-
-```sh
-mkdir -p circuits/Reuse
-cd circuits/Reuse
-
-# compile circuit
-circom Reuse.circom --r1cs --wasm --sym --prime bls12381
-
-# trusted setup (PLONK)
-snarkjs powersoftau new bls12-381 5 pot5_0000.ptau -v
-snarkjs powersoftau contribute pot5_0000.ptau pot5_0001.ptau --name="First contribution" -v -e="some random text"
-snarkjs powersoftau prepare phase2 pot5_0001.ptau pot5_final.ptau -v
-snarkjs plonk setup Reuse.r1cs pot5_final.ptau Reuse_0000.zkey
-snarkjs zkey export verificationkey Reuse_0000.zkey verification_key.json
-
-cd ../..
-
-# export FunC and Tolk contracts
-npx export-ton-verifier ./circuits/Reuse/Reuse_0000.zkey ./contracts/Reuse.tolk
-npx export-ton-verifier ./circuits/Reuse/Reuse_0000.zkey ./contracts/Reuse.fc --func
-```
-
-## Testing contracts
+## Build and test
 
 ```sh
 npx blueprint build --all
-npx blueprint test
+npm test
 ```
+
+The test suite runs serially. It checks real snarkjs proofs through both getter and internal-message paths in FunC and Tolk, and rejects invalid proofs, malformed or trailing payloads, and mismatched compressed/uncompressed point representations.
+
+Gas snapshots are stored in `bench-snapshots/`.

@@ -1,13 +1,13 @@
 {
   "gas": {
-    "Deploy": 741,
-    "Getter verify 1": 288642,
-    "Send verify 1": 296363,
-    "Getter verify 0": 290706,
-    "Send verify 0": 298427
+    "Deploy": 841,
+    "Getter verify condition-cond-1": 723555,
+    "Send verify condition-cond-1": 754920,
+    "Getter verify condition-cond-0": 729215,
+    "Send verify condition-cond-0": 760580
   },
   "codeSize": {
-    "condition_tolk bits": 24720,
-    "condition_tolk cells": 43
+    "condition_tolk bits": 46162,
+    "condition_tolk cells": 77
   }
 }

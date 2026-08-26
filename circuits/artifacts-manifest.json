@@ -1,0 +1,76 @@
+{
+  "schema": 1,
+  "curve": "bls12-381",
+  "ptauPower": 8,
+  "ptau": {
+    "path": "circuits/bls12-381-pot8-final.ptau",
+    "sha256": "05f68eee30eafd654e5407b86409a0fd3961b4fb628d5c665ec01dc5f967bb50"
+  },
+  "tools": {
+    "circom": "2.2.3",
+    "snarkjs": "0.7.6"
+  },
+  "circuits": {
+    "condition": {
+      "sources": {
+        "condition.circom": "a730b4e58c529273723e0ac573cac7699725660a84a0b04c0183424c9d5fc2b8"
+      },
+      "artifacts": {
+        "r1cs": "a617442143a8c63bd66a9a06ac1af6fbd7dfe7119b6a1efdbc02631b60ab0561",
+        "sym": "46fcabc46dfde4ed9a40cfb166dcd665258aced8982e810c9c00b6eceb9c6aed",
+        "wasm": "4d85670e75ba4f1a7c3da5c992eaf65cb13a5e6ea50dfab41db8473cebcff7eb",
+        "zkey": "dfc93253956015792e96546fe5681b1d2072dd135fcb7998cb94fc63c2256978",
+        "verificationKey": "ea769df5d524e3222d31666f1c0f7b4c005a6aac7bfac9bb85f76f370f59f9c9"
+      }
+    },
+    "fibonacci": {
+      "sources": {
+        "fibonacci.circom": "0a05fe7a541ee8d7f6d7260c0e49c06fda68aed93f87ce8a3b01794d5481b673"
+      },
+      "artifacts": {
+        "r1cs": "a2a5db644fa78cfba5f4619ced40983de17964f23b38a563602331564fea9391",
+        "sym": "8a7dadadb95b33c603cff95c290264e596815141c380e82d1594fd063df32de9",
+        "wasm": "54bd27ec46988c076a9b3200d96d275a180cb4f7b6c25687b1c72a3c15c5f7d3",
+        "zkey": "00036ad08d708e48331ec5dc3f7ce99c78b5d22907e1c73a65131648d953e69b",
+        "verificationKey": "7a13a9def0a062a5b812f7a81fb6c7113fe736aca64c9090825b9b968f13cab4"
+      }
+    },
+    "multiply_three": {
+      "sources": {
+        "multiply_three.circom": "b2edc038958bb8a43bfbab8a0546dba56ce3ab957db4121cdec6fdba214ca9c3"
+      },
+      "artifacts": {
+        "r1cs": "9d2b9389fd62627787661d119d225fb7a35d88360ae8c6dc353a2ee1c0d2b2d5",
+        "sym": "f533f5ae20b5620ce3e1e1a8b8e9b1451c2131eb8ed74f3d53970cb539678dda",
+        "wasm": "195bdd9184d7562f0c9df275009d593bb795831a24ddd557b538d1effa870bd3",
+        "zkey": "8693a7426c91acca17e59ac441eb9b7e529833c26441ebe97ae97d7b06ef3fb6",
+        "verificationKey": "6b252e2434dd56cdfc29c61a16a040ede5a11e10cc37159411aac53f6f86defc"
+      }
+    },
+    "PowerABN": {
+      "sources": {
+        "PowerABN.circom": "5e9ff7923e9915219a86c99bd5fc8b255c4cf6e75c73583b89f1952a8568e979"
+      },
+      "artifacts": {
+        "r1cs": "b7ab19c95b7fce5caf28898219ba78a774611f52dd429da9fb37e8b96f626c3a",
+        "sym": "b764e78c8cc5205d6de67886a18114aab1d5f5a7716e61ed7e98b3046e863a88",
+        "wasm": "aabfe2d83938e6b8c03a7cab667561b47d518c8c8934df65d5b8027ef5cdd988",
+        "zkey": "c863fac490e747be01578a6a3ee6a95fc0cf630ad700cb3705562fa67eabcede",
+        "verificationKey": "bbee9c72964a0f810e608f3b8ff5e3c10ed2cec321b76f79935a09d7abaac4c8"
+      }
+    },
+    "Reuse": {
+      "sources": {
+        "Reuse.circom": "c9ee98d2143a14f11e7defdae8e83b7b4b8783ad15790d7f492549e1365ba82a",
+        "Multiplier.circom": "abf2cb5b112e5d86d988e89bd0f3771408e7675ae39b248f15609255e27c05ac"
+      },
+      "artifacts": {
+        "r1cs": "4a12b943c79f56755f33ea712370f2ab37721b59d1db81b50763a5586b4b5b4c",
+        "sym": "2b57815477d0636f6523498e15c27e530edd2ff27116a72446d36849a06a3795",
+        "wasm": "08b4c68f24d654ea41cc0d1f4068f8a1d722ac3ba9255392db5de535038d3379",
+        "zkey": "12a2af5fd94def37ef6ddf69225ac07e4c4fd1756c5ada8bcd4e90bbc36c1471",
+        "verificationKey": "2498234467a89a3340d0086b5ca06e59e3824f251746c74e5d3b1d37e0cf7075"
+      }
+    }
+  }
+}

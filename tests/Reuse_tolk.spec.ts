@@ -1,14 +1,9 @@
 import { Cell } from '@ton/core';
 import { compile } from '@ton/blueprint';
-import path from 'path';
 
 import { GasLogAndSave } from './gas-logger';
-import { deployVerifier, expectVerifierAcceptsGeneratedProofMessage } from './tolk-verifier-helpers';
-
-const verificationKey = require('../circuits/Reuse/verification_key.json');
-const wasmPath = path.join(__dirname, '../circuits/Reuse/Reuse_js', 'Reuse.wasm');
-const zkeyPath = path.join(__dirname, '../circuits/Reuse', 'Reuse_0000.zkey');
-const validInput = { a: '534', b: '43', c: '423' };
+import { deployVerifier, expectVerifierAcceptsProofMessage } from './tolk-verifier-helpers';
+import { loadProofFixture } from '../scripts/proofFixtures';
 
 describe('Reuse_tolk', () => {
     let code: Cell;
@@ -25,13 +20,10 @@ describe('Reuse_tolk', () => {
 
     it('should call the Tolk verifier and send a PLONK proof to the contract', async () => {
         const { deployer, verifier } = await deployVerifier(code, GAS_LOG);
-        await expectVerifierAcceptsGeneratedProofMessage(
+        await expectVerifierAcceptsProofMessage(
             deployer,
             verifier,
-            verificationKey,
-            validInput,
-            wasmPath,
-            zkeyPath,
+            loadProofFixture('reuse-default'),
             { logger: GAS_LOG, getterStepName: 'Getter verify', messageStepName: 'Send verify' },
         );
     });

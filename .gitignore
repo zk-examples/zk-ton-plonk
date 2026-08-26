@@ -31,3 +31,15 @@ Session.vim
 *_js/
 *.tgz
 fixtures
+.cache/
+
+# Reproducible PLONK test artifacts. The build script verifies all hashes.
+!export-ton-verifier-3.0.3.tgz
+!circuits/bls12-381-pot8-final.ptau
+!circuits/artifacts-manifest.json
+!circuits/*/*.r1cs
+!circuits/*/*.sym
+!circuits/*/*_0000.zkey
+!circuits/*/*_js/
+circuits/*/*_js/*
+!circuits/*/*_js/*.wasm
